@@ -1,0 +1,8 @@
+:0 c
+* ^Subject:.*FH.*orders.*
+| /home/ramblurr/src/fh/engine/bash/fhprocmail
+ 
+:0
+Orders
+
+# EOF

@@ -1,0 +1,67 @@
+START COMBAT
+END
+
+START PRE-DEPARTURE
+
+    Name 1 2 3 4 PL Dupa Krzys
+    ENEMY 0
+    ENEMY SP Foo Bar
+    ENEMY SP 1234 ; field-distorted pirates
+    
+    Unload TR1 Transport Name
+    INSTALL 8 IU PL Dupa Jasiu
+    INSTALL 0 AU PL Dupa Jasiu
+    INSTALL PL Dupa Jasiu
+
+END
+
+START JUMPS
+    ; This is a complete list of commands supported
+	Jump PB Foobar, PL Dupa Jasiu
+	Jump PB Foobar, 1 2 3
+	Move CS Sneaky, 12 23 34
+	Pjump TR1 Foobar, 1 2 3, BAS Helper
+	Visited 11 22 33
+	Wormhole BAS Death Star
+	Wormhole TR8 Colonizer, PL Habitable  
+END
+
+START PRODUCTION
+
+    PRODUCTION PL Dupa Jasiu
+    	DEVELOP
+	DEVELOP 99
+	DEVELOP 99 PL Krzysiu
+	DEVELOP 99 PL Krzysiu, TR8 Foobar
+	DEVELOP PL Krzysiu, TR8 Foobar
+	DEVELOP 2 
+
+Build 10 AU
+Build 1 IU
+Build 1888 CU
+BUILD TR1 Transport Name
+
+enemy 0
+neutral 0
+
+shipyard
+
+END
+
+START POST-ARRIVAL
+   Orbit TR1 Transport Name, PL Dupa Jasiu
+   Transfer 10 AU PL Dupa Jasiu, TR1 Transport Name
+   Transfer 0 IU PL Dupa Jasiu, TR1 Transport Name
+Transfer 123 CU PL Dupa Jasiu, TR1 Transport Name
+   
+Transfer 0 AU TR1 Transport Name, PL Dupa Jasiu
+
+enemy 0
+ally SP Dupa
+neu 0
+
+END
+
+START STRIKES
+END
+
