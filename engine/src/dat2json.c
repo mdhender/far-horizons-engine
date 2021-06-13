@@ -27,6 +27,7 @@ void get_planet_data(void);
 void get_species_data(void);
 void get_star_data(void);
 
+const char *commandCode(int j);
 const char *gasCode(int j);
 const char *itemCode(int j);
 char *itoa(int val, char *buffer, int radix);
@@ -36,10 +37,13 @@ void jint(FILE *fp, int indent, const char *name, int val, const char *eol);
 void jstr(FILE *fp, int indent, const char *name, const char *val, const char *eol);
 const char *mkkey(int x, int y, int z, int orbit);
 const char *shipClassCode(int j);
+const char *shipClassName(int j);
 const char *shipStatusCode(int j);
 const char *shipTypeCode(int j);
 const char *starColor(int j);
 const char *starType(int j);
+const char *techCode(int j);
+const char *transType(int j);
 char *strreverse(char *s);
 
 int
@@ -50,9 +54,9 @@ main(int argc, char *argv[]) {
     FILE *fp;
 
     // create the output file
-    fp = fopen("cluster.json", "w");
+    fp = fopen("galaxy.json", "w");
     if (fp == NULL) {
-        fprintf(stderr, "Cannot create output file 'cluster.json'!\n");
+        fprintf(stderr, "Cannot create output file 'galaxy.json'!\n");
         return(2);
     }
 
@@ -63,13 +67,38 @@ main(int argc, char *argv[]) {
     get_species_data();
 
     fprintf(fp, "{\n");
-    jstr(fp, 1, "version", "7.0.1", ",\n");
+    jstr(fp, 1, "version", "7.3.0", ",\n");
 
-    fprintf(fp, "\t\"cluster\": {\n");
+    fprintf(fp, "\t\"galaxy\": {\n");
+    jint(fp, 2, "turn_number", galaxy.turn_number, ",\n");
     jint(fp, 2, "d_num_species", galaxy.d_num_species, ",\n");
     jint(fp, 2, "num_species", galaxy.num_species, ",\n");
     jint(fp, 2, "radius", galaxy.radius, ",\n");
-    jint(fp, 2, "turn_number", galaxy.turn_number, "\n");
+    jint(fp, 2, "min_radius", MIN_RADIUS, ",\n");
+    jint(fp, 2, "max_radius", MAX_RADIUS, ",\n");
+    jint(fp, 2, "std_num_stars", STANDARD_NUMBER_OF_STAR_SYSTEMS, ",\n");
+    jint(fp, 2, "min_stars", MIN_STARS, ",\n");
+    jint(fp, 2, "max_stars", MAX_STARS, ",\n");
+    jint(fp, 2, "std_num_species", STANDARD_NUMBER_OF_SPECIES, ",\n");
+    jint(fp, 2, "min_species", MIN_SPECIES, ",\n");
+    jint(fp, 2, "max_species", MAX_SPECIES, ",\n");
+    jint(fp, 2, "max_items", MAX_ITEMS, ",\n");
+    jint(fp, 2, "max_locations", MAX_LOCATIONS, ",\n");
+    jint(fp, 2, "max_transactions", MAX_TRANSACTIONS, ",\n");
+    jint(fp, 2, "num_commands", NUM_COMMANDS, ",\n");
+    jint(fp, 2, "num_contact_words", NUM_CONTACT_WORDS, ",\n");
+    jint(fp, 2, "num_ship_classes", NUM_SHIP_CLASSES, ",\n");
+    jint(fp, 2, "sizeof char", sizeof(char), ",\n");
+    jint(fp, 2, "sizeof int", sizeof(int), ",\n");
+    jint(fp, 2, "sizeof long", sizeof(int32_t), ",\n");
+    jint(fp, 2, "sizeof short", sizeof(int16_t), ",\n");
+    jint(fp, 2, "sizeof galaxy_data", sizeof(struct galaxy_data), ",\n");
+    jint(fp, 2, "sizeof star_data", sizeof(struct star_data), ",\n");
+    jint(fp, 2, "sizeof planet_data", sizeof(struct planet_data), ",\n");
+    jint(fp, 2, "sizeof nampla_data", sizeof(struct nampla_data), ",\n");
+    jint(fp, 2, "sizeof species_data", sizeof(struct species_data), ",\n");
+    jint(fp, 2, "sizeof ship_data", sizeof(struct ship_data), ",\n");
+    jint(fp, 2, "sizeof trans_data", sizeof(struct trans_data), "\n");
     fprintf(fp, "\t},\n");
 
     fprintf(fp, "\t\"systems\": [\n");
@@ -301,7 +330,7 @@ main(int argc, char *argv[]) {
             jbool(fp, 6, "populated", nampla->status & POPULATED, ",\n");
             jbool(fp, 6, "mining_colony", nampla->status & MINING_COLONY, ",\n");
             jbool(fp, 6, "resort_colony", nampla->status & RESORT_COLONY, ",\n");
-            jbool(fp, 6, "disbabded_colony", nampla->status & DISBANDED_COLONY, "\n");
+            jbool(fp, 6, "disbanded_colony", nampla->status & DISBANDED_COLONY, "\n");
             fprintf(fp, "\t\t\t\t\t},\n");
             jbool(fp, 5, "hiding", nampla->hiding, ",\n");
             jint(fp, 5, "hidden", nampla->hidden, ",\n");
@@ -387,12 +416,130 @@ main(int argc, char *argv[]) {
         }
         fprintf(fp, "\n");
     }
-    fprintf(fp, "\t]\n");
+    fprintf(fp, "\t],\n");
+
+    fprintf(fp, "\t\"commands\": {\n");
+    for (int i = 1; i < NUM_COMMANDS; i++) {
+        jstr(fp, 2, command_abbr[i], command_name[i], ",\n");
+    }
+    jstr(fp, 2, command_abbr[0], command_name[0], "\n");
+    fprintf(fp, "\t},\n");
+
+    fprintf(fp, "\t\"items\": {\n");
+    for (int i = 0; i < MAX_ITEMS; i++) {
+        fprintf(fp, "\t\t\"%s\": {\n", item_abbr[i]);
+        jstr(fp, 3, "name", item_name[i], ",\n");
+        jint(fp, 3, "cost", item_cost[i], ",\n");
+        if (item_critical_tech[i] >= MI && item_critical_tech[i] <= BI) {
+            fprintf(fp, "\t\t\t\"tech\": {\"%s\": %d},\n", techCode(item_critical_tech[i]), item_tech_requirment[i]);
+        } else {
+        }
+        jint(fp, 3, "carry_cost", item_carry_capacity[i], "\n");
+        fprintf(fp, "\t\t}");
+        if (i + 1 < MAX_ITEMS) {
+            fprintf(fp, ",");
+        }
+        fprintf(fp, "\n");
+    }
+    fprintf(fp, "\t},\n");
+
+    fprintf(fp, "\t\"ships\": {\n");
+    for (int i = 0; i < NUM_SHIP_CLASSES; i++) {
+        fprintf(fp, "\t\t\"%s\": {\n", ship_abbr[i]);
+        jstr(fp, 3, "class", shipClassName(i), ",\n");
+        jint(fp, 3, "min_ma", 2 * ship_tonnage[i], ",\n");
+        jint(fp, 3, "cost_ftl", ship_cost[i], ",\n");
+        jint(fp, 3, "cost_sublight", 75 * ship_cost[i] / 100, ",\n");
+        if (i == TR) {
+            jint(fp, 3, "tonnage", ship_tonnage[i], "\n");
+        } else {
+            jint(fp, 3, "tonnage", ship_tonnage[i], ",\n");
+            jint(fp, 3, "carrying_capacity", ship_tonnage[i], "\n");
+        }
+        fprintf(fp, "\t\t}");
+        if (i + 1 < NUM_SHIP_CLASSES) {
+            fprintf(fp, ",");
+        }
+        fprintf(fp, "\n");
+    }
+    fprintf(fp, "\t},\n");
+
+    fprintf(fp, "\t\"tech\": {\n");
+    for (int i = MI; i <= BI; i++) {
+        const char *eol = ",\n";
+        if (i == BI) {
+            eol = "\n";
+        }
+        jstr(fp, 2, tech_abbr[i], tech_name[i], eol);
+    }
+    fprintf(fp, "\t}\n");
 
     fprintf(fp, "}\n");
     fclose(fp);
 
     return(0);
+}
+
+const char *
+commandCode(int j) {
+    switch (j) {
+    case UNDEFINED : return "UNDEFINED";
+    case ALLY : return "ALLY";
+    case AMBUSH : return "AMBUSH";
+    case ATTACK : return "ATTACK";
+    case AUTO : return "AUTO";
+    case BASE : return "BASE";
+    case BATTLE : return "BATTLE";
+    case BUILD : return "BUILD";
+    case CONTINUE : return "CONTINUE";
+    case DEEP : return "DEEP";
+    case DESTROY : return "DESTROY";
+    case DEVELOP : return "DEVELOP";
+    case DISBAND : return "DISBAND";
+    case END : return "END";
+    case ENEMY : return "ENEMY";
+    case ENGAGE : return "ENGAGE";
+    case ESTIMATE : return "ESTIMATE";
+    case HAVEN : return "HAVEN";
+    case HIDE : return "HIDE";
+    case HIJACK : return "HIJACK";
+    case IBUILD : return "IBUILD";
+    case ICONTINUE : return "ICONTINUE";
+    case INSTALL : return "INSTALL";
+    case INTERCEPT : return "INTERCEPT";
+    case JUMP : return "JUMP";
+    case LAND : return "LAND";
+    case MESSAGE : return "MESSAGE";
+    case MOVE : return "MOVE";
+    case NAME : return "NAME";
+    case NEUTRAL : return "NEUTRAL";
+    case ORBIT : return "ORBIT";
+    case PJUMP : return "PJUMP";
+    case PRODUCTION : return "PRODUCTION";
+    case RECYCLE : return "RECYCLE";
+    case REPAIR : return "REPAIR";
+    case RESEARCH : return "RESEARCH";
+    case SCAN : return "SCAN";
+    case SEND : return "SEND";
+    case SHIPYARD : return "SHIPYARD";
+    case START : return "START";
+    case SUMMARY : return "SUMMARY";
+    case SURRENDER : return "SURRENDER";
+    case TARGET : return "TARGET";
+    case TEACH : return "TEACH";
+    case TECH : return "TECH";
+    case TELESCOPE : return "TELESCOPE";
+    case TERRAFORM : return "TERRAFORM";
+    case TRANSFER : return "TRANSFER";
+    case UNLOAD : return "UNLOAD";
+    case UPGRADE : return "UPGRADE";
+    case VISITED : return "VISITED";
+    case WITHDRAW : return "WITHDRAW";
+    case WORMHOLE : return "WORMHOLE";
+    case ZZZ : return "ZZZ";
+    }
+    abend("assert(command_code != %d)\n", j);
+    return "??";
 }
 
 /* Gases in planetary atmospheres. */
@@ -401,21 +548,19 @@ gasCode(int j) {
     switch (j) {
     case H2 : return "H2";  // Hydrogen
     case CH4: return "CH4";   // Methane
-    case HE : return "HE";  // Helium
+    case HE : return "He";  // Helium
     case NH3: return "NH3";   // Ammonia
     case N2 : return "N2";  // Nitrogen
     case CO2: return "CO2";   // Carbon Dioxide
     case O2 : return "O2";  // Oxygen
-    case HCL: return "HCL";   // Hydrogen Chloride
-    case CL2: return "CL2";   // Chlorine
+    case HCL: return "HCl";   // Hydrogen Chloride
+    case CL2: return "Cl2";   // Chlorine
     case F2 : return "F2";   // Fluorine
     case H2O: return "H2O";    // Steam
     case SO2: return "SO2";    // Sulfur Dioxide
     case H2S: return "H2S";    // Hydrogen Sulfide
-    default:
-        fprintf(stderr, "assert(gas_code != %d)\n", j);
-        exit(2);
     }
+    abend("assert(gas_code != %d)\n", j);
     return("??");
 }
 
@@ -497,11 +642,8 @@ itemCode(int j) {
     case X4:  return("X4");  /* Unassigned. */
 
     case X5:  return("X5");  /* Unassigned. */
-
-    default:
-        fprintf(stderr, "assert(item_index != %d)\n", j);
-        exit(2);
     }
+    abend("assert(item_index != %d)\n", j);
     return("??");
 }
 
@@ -630,11 +772,34 @@ shipClassCode(int j) {
     case BA: return("BA");   /* Starbase. */
 
     case TR: return("TR");   /* Transport. */
-
-    default:
-        fprintf(stderr, "assert(ship_class != %d)\n", j);
-        exit(2);
     }
+    abend("assert(ship_class != %d)\n", j);
+    return("??");
+}
+
+const char *
+shipClassName(int j) {
+    switch (j) {
+    case PB: return("Picketboat");
+    case CT: return("Corvette");
+    case ES: return("Escort");
+    case DD: return("Destroyer");
+    case FG: return("Frigate");
+    case CL: return("Light Cruiser");
+    case CS: return("Strike Cruiser");
+    case CA: return("Heavy Cruiser");
+    case CC: return("Command Cruiser");
+    case BC: return("Battlecruiser");
+    case BS: return("Battleship");
+    case DN: return("Dreadnought");
+    case SD: return("Super Dreadnought");
+    case BM: return("Battlemoon");
+    case BW: return("Battleworld");
+    case BR: return("Battlestar");
+    case BA: return("Starbase");
+    case TR: return("Transport");
+    }
+    abend("assert(ship_class != %d)\n", j);
     return("??");
 }
 
@@ -652,11 +817,8 @@ shipStatusCode(int j) {
     case JUMPED_IN_COMBAT: return("JUMPED_IN_COMBAT");
 
     case FORCED_JUMP: return("FORCED_JUMP");
-
-    default:
-        fprintf(stderr, "assert(ship_status != %d)\n", j);
-        exit(2);
     }
+    abend("assert(ship_status != %d)\n", j);
     return("??");
 }
 
@@ -668,11 +830,8 @@ shipTypeCode(int j) {
     case SUB_LIGHT: return("SUB_LIGHT");
 
     case STARBASE: return("STARBASE");
-
-    default:
-        fprintf(stderr, "assert(ship_type != %d)\n", j);
-        exit(2);
     }
+    abend("assert(ship_type != %d)\n", j);
     return("??");
 }
 
@@ -686,10 +845,23 @@ starColor(int j) {
     case YELLOW          : return "YELLOW";
     case ORANGE          : return "ORANGE";
     case RED          : return "RED";
-    default:
-        abend("assert(star_color != %d)\n", j);
     }
+    abend("assert(star_color != %d)\n", j);
     return "??";
+}
+
+const char *
+starColorCode(int j) {
+    switch (j) {
+    case BLUE          : return "O";
+    case BLUE_WHITE          : return "B";
+    case WHITE          : return "A";
+    case YELLOW_WHITE          : return "F";
+    case YELLOW          : return "G";
+    case ORANGE          : return "K";
+    case RED          : return "M";
+    }
+    return " ";
 }
 
 const char *
@@ -699,10 +871,20 @@ starType(int j) {
     case DEGENERATE     : return "DEGENERATE";
     case MAIN_SEQUENCE  : return "MAIN_SEQUENCE";
     case GIANT          : return "GIANT";
-    default:
-        abend("assert(star_type != %d)\n", j);
     }
+    abend("assert(star_type != %d)\n", j);
     return "??";
+}
+
+const char *
+starTypeCode(int j) {
+    switch (j) {
+    case DWARF          : return "d";
+    case DEGENERATE     : return "D";
+    case MAIN_SEQUENCE  : return " ";
+    case GIANT          : return "g";
+    }
+    return " ";
 }
 
 // reverse the buffer by swapping from the ends
@@ -717,4 +899,41 @@ strreverse(char *s) {
         begin++;
     }
     return(s);
+}
+
+const char *
+techCode(int j) {
+    switch (j) {
+    case BI: return "BI";
+    case GV: return "GV";
+    case LS: return "LS";
+    case MA: return "MA";
+    case MI: return "MI";
+    case ML: return "ML";
+    }
+    abend("assert(tech_code != %d)\n", j);
+    return "??";
+}
+
+const char *
+transType(int j) {
+    switch (j) {
+    case EU_TRANSFER : return "EU_TRANSFER";
+    case MESSAGE_TO_SPECIES : return "MESSAGE_TO_SPECIES";
+    case BESIEGE_PLANET : return "BESIEGE_PLANET";
+    case SIEGE_EU_TRANSFER : return "SIEGE_EU_TRANSFER";
+    case TECH_TRANSFER : return "TECH_TRANSFER";
+    case DETECTION_DURING_SIEGE : return "DETECTION_DURING_SIEGE";
+    case SHIP_MISHAP : return "SHIP_MISHAP";
+    case ASSIMILATION : return "ASSIMILATION";
+    case INTERSPECIES_CONSTRUCTION : return "INTERSPECIES_CONSTRUCTION";
+    case TELESCOPE_DETECTION : return "TELESCOPE_DETECTION";
+    case ALIEN_JUMP_PORTAL_USAGE : return "ALIEN_JUMP_PORTAL_USAGE";
+    case KNOWLEDGE_TRANSFER : return "KNOWLEDGE_TRANSFER";
+    case LANDING_REQUEST : return "LANDING_REQUEST";
+    case LOOTING_EU_TRANSFER : return "LOOTING_EU_TRANSFER";
+    case ALLIES_ORDER : return "ALLIES_ORDER";
+    }
+    abend("assert(trans_type != %d)\n", j);
+    return "??";
 }
