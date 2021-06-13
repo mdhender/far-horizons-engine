@@ -295,8 +295,15 @@ main(int argc, char *argv[]) {
             jstr(fp, 5, "location", mkkey(nampla->x, nampla->y, nampla->z, nampla->pn), ",\n");
             jcoords(fp, 5, "coords", nampla->x, nampla->y, nampla->z, ",\n");
             jint(fp, 5, "orbit", nampla->pn, ",\n");
-            jint(fp, 5, "status", nampla->status, ",\n");
-            jint(fp, 5, "hiding", nampla->hiding, ",\n");
+            fprintf(fp, "\t\t\t\t\t\"status\": {\n");
+            jbool(fp, 6, "home_planet", nampla->status & HOME_PLANET, ",\n");
+            jbool(fp, 6, "colony", nampla->status & COLONY, ",\n");
+            jbool(fp, 6, "populated", nampla->status & POPULATED, ",\n");
+            jbool(fp, 6, "mining_colony", nampla->status & MINING_COLONY, ",\n");
+            jbool(fp, 6, "resort_colony", nampla->status & RESORT_COLONY, ",\n");
+            jbool(fp, 6, "disbabded_colony", nampla->status & DISBANDED_COLONY, "\n");
+            fprintf(fp, "\t\t\t\t\t},\n");
+            jbool(fp, 5, "hiding", nampla->hiding, ",\n");
             jint(fp, 5, "hidden", nampla->hidden, ",\n");
             jint(fp, 5, "planet_index", nampla->planet_index, ",\n");
             jint(fp, 5, "siege_eff", nampla->siege_eff, ",\n");
@@ -313,6 +320,7 @@ main(int argc, char *argv[]) {
             jint(fp, 5, "use_on_ambush", nampla->use_on_ambush, ",\n");
             jint(fp, 5, "message", nampla->message, ",\n");
             fprintf(fp, "\t\t\t\t\t\"inventory\": {");
+            isep = "";
             for (j = 0; j < MAX_ITEMS; j++) {
                 if (nampla->item_quantity[j] == 0) {
                     continue;
