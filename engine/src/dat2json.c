@@ -38,6 +38,8 @@ const char *mkkey(int x, int y, int z, int orbit);
 const char *shipClassCode(int j);
 const char *shipStatusCode(int j);
 const char *shipTypeCode(int j);
+const char *starColor(int j);
+const char *starType(int j);
 char *strreverse(char *s);
 
 int
@@ -80,8 +82,8 @@ main(int argc, char *argv[]) {
         jint(fp, 3, "id", i + 1, ",\n");
         jstr(fp, 3, "key", mkkey(star->x, star->y, star->z, 0), ",\n");
         jcoords(fp, 3, "coords", star->x, star->y, star->z, ",\n");
-        jint(fp, 3, "type", star->type, ",\n");
-        jint(fp, 3, "color", star->color, ",\n");
+        jstr(fp, 3, "type", starType(star->type), ",\n");
+        jstr(fp, 3, "color", starColor(star->color), ",\n");
         jint(fp, 3, "size", star->size, ",\n");
         if (star->home_system != 0) {
             jbool(fp, 3, "home_system", star->home_system, ",\n");
@@ -664,6 +666,35 @@ shipTypeCode(int j) {
         exit(2);
     }
     return("??");
+}
+
+const char *
+starColor(int j) {
+    switch (j) {
+    case BLUE          : return "BLUE";
+    case BLUE_WHITE          : return "BLUE_WHITE";
+    case WHITE          : return "WHITE";
+    case YELLOW_WHITE          : return "YELLOW_WHITE";
+    case YELLOW          : return "YELLOW";
+    case ORANGE          : return "ORANGE";
+    case RED          : return "RED";
+    default:
+        abend("assert(star_color != %d)\n", j);
+    }
+    return "??";
+}
+
+const char *
+starType(int j) {
+    switch (j) {
+    case DWARF          : return "DWARF";
+    case DEGENERATE     : return "DEGENERATE";
+    case MAIN_SEQUENCE  : return "MAIN_SEQUENCE";
+    case GIANT          : return "GIANT";
+    default:
+        abend("assert(star_type != %d)\n", j);
+    }
+    return "??";
 }
 
 // reverse the buffer by swapping from the ends
