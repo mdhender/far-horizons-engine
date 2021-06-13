@@ -1,59 +1,71 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 #include "fh.h"
 
-
 /* In case gamemaster creates new star systems with Edit program. */
-#define NUM_EXTRA_STARS	20
+#define NUM_EXTRA_STARS    20
 
+int num_stars, star_data_modified;
 
-int			num_stars, star_data_modified;
+struct star_data *star_base;
 
-struct star_data	*star_base;
+void
+get_star_data() {
+    extern int num_stars;
+    extern int star_data_modified;
+    extern struct star_data *star_base;
 
+    const char *filename = "stars.dat";
+    struct stat sb;
+    int         fd;
+    ssize_t     bytesRead;
+    int32_t     numStars;
 
-get_star_data ()
-
-{
-    int		star_fd;
-
-    long	byte_size, star_data_size, mem_size;
-
-
-    /* Open star file. */
-    star_fd = open ("stars.dat", 0);
-    if (star_fd < 0)
-    {
-	fprintf (stderr, "\n\tCannot open file stars.dat!\n");
-	exit (999);
+    if (stat(filename, &sb) != 0) {
+        abend("\n\tCannot stat '%s'\n\n", filename);
+    } else if (sb.st_size == 0) {
+        abend("\n\tFile '%s' is empty\n\n", filename);
+    } else if (sb.st_size < sizeof(numStars)) {
+        abend("\n\tFile '%s' does not have number of stars marker\n\n", filename);
     }
 
-    byte_size = read (star_fd, &num_stars, sizeof(num_stars));
-    if (byte_size != sizeof(num_stars))
-    {
-	fprintf (stderr, "\n\tCannot read num_stars in file 'stars.dat'!\n\n");
-	exit (999);
+    fd = open(filename, O_RDONLY);
+    if (fd < 0) {
+        abend("\n\tCannot open '%s' for reading!\n\n", filename);
     }
 
-    /* Allocate enough memory for all stars. */
-    mem_size =
-	(long) (num_stars + NUM_EXTRA_STARS) * (long) sizeof(struct star_data);
-    star_data_size =
-	(long) num_stars * (long) sizeof(struct star_data);
-    star_base = (struct star_data *) malloc (mem_size);
-    if (star_base == NULL)
-    {
-	fprintf (stderr, "\nCannot allocate enough memory for star file!\n\n");
-	exit (-1);
+    bytesRead = read(fd, &numStars, sizeof(numStars));
+    if (bytesRead != sizeof(numStars)) {
+        abend("\n\tCannot read number of stars from file '%s'!\n\n", filename);
+    }
+    if (sizeof(numStars) + numStars * sizeof(struct star_data) != sb.st_size) {
+        fprintf(stderr, "File '%s' is %8ld bytes\n", filename, (long int)sb.st_size);
+        fprintf(stderr, "    marker    is %8ld bytes\n", (long int)sizeof(numStars));
+        fprintf(stderr, "    star_data is %8ld bytes\n", (long int)sizeof(struct star_data));
+        fprintf(stderr, "    num_stars is %8d bytes\n", numStars);
+        fprintf(stderr, "    file size sb %8ld bytes\n", (long int)(sizeof(numStars) + numStars * sizeof(struct star_data)));
+        abend("\n\tFile '%s' doesn't contain %d stars\n\n", filename, numStars, (sb.st_size - sizeof(numStars)) % sizeof(struct star_data));
     }
 
-    /* Read it all into memory. */
-    byte_size = read (star_fd, star_base, star_data_size);
-    if (byte_size != star_data_size)
-    {
-	fprintf (stderr, "\nCannot read star file into memory!\n\n");
-	exit (-1);
+    // Globals. Sigh.
+    num_stars = numStars;
+
+    // allocate enough memory for all stars.
+    star_base = (struct star_data *)calloc(numStars + NUM_EXTRA_STARS, sizeof(struct star_data));
+    if (star_base == 0) {
+        abend("\nCannot allocate enough memory for %d stars!\n\n", numStars + NUM_EXTRA_STARS);
     }
-    close (star_fd);
+
+    bytesRead = read(fd, star_base, numStars * sizeof(struct star_data));
+    if (bytesRead != numStars * sizeof(struct star_data)) {
+        abend("\n\tCannot read data in file '%s'!\n\n", filename);
+    }
+
+    close(fd);
 
     star_data_modified = FALSE;
 }

@@ -9,6 +9,22 @@ char	original_name[32], upper_name[32];
 long	value;
 FILE	*input_file;
 
+char *fgetln(char *dst, int len, FILE *fp) {
+	static char mbuf[1024];
+	int i, k;
+	char *p = fgets(mbuf, 1000, fp);
+	if (p == 0) {
+		return p;
+	}
+	for (i = 0; i < 1000; i++) {
+		if (p[i] == '\r') {
+			memmove(p+i, p+i+1, 1000-i);
+		}
+		if p[i] == '\n' {
+			memset(p+i, 0, 1000-i);
+		}
+	}
+}
 
 /* Skip white space and comments. */
 skip_junk ()

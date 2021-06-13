@@ -36,7 +36,7 @@
 #define MAX_LOCATIONS	10000
 struct sp_loc_data
 {
-    char	s, x, y, z;	/* Species number, x, y, and z. */
+    uint8_t	s, x, y, z;	/* Species number, x, y, and z. */
 };
 
 
@@ -47,6 +47,12 @@ struct galaxy_data
     int32_t		radius;		/* Galactic radius in parsecs. */
     int32_t		turn_number;	/* Current turn number. */
 };
+
+void get_galaxy_data(void);
+void abend(const char *fmt, ...);
+void *readFile(const char *filename);
+
+//struct galaxy_data *get_galaxy_data (void);
 
 
 /* Assume at least 32 bits per long word. */
@@ -93,6 +99,7 @@ struct star_data
     int32_t	reserved5;	/* Reserved for future use. Zero for now. */
 };
 
+void get_star_data(void);
 
 /* Gases in planetary atmospheres. */
 #define	H2	1	/* Hydrogen */
@@ -134,6 +141,7 @@ struct planet_data
     int32_t	reserved5;	    /* Reserved for future use. Zero for now. */
 };
 
+void get_planet_data(void);
 
 /* Tech level ids. */
 #define	MI	0	/* Mining tech level. */
@@ -187,6 +195,7 @@ struct species_data
 						all zeroes. */
 };
 
+void get_species_data(void);
 
 /* Item IDs. */
 #define	RM	0	/* Raw Material Units. */
