@@ -27,6 +27,7 @@ void get_planet_data(void);
 void get_species_data(void);
 void get_star_data(void);
 
+const char *gasCode(int j);
 const char *itemCode(int j);
 char *itoa(int val, char *buffer, int radix);
 void jbool(FILE *fp, int indent, const char *name, int val, const char *eol);
@@ -129,20 +130,22 @@ main(int argc, char *argv[]) {
 
     fprintf(fp, "\t\"planets\": [\n");
     for (i = 0; i < num_planets; i++) {
+        const char *gsep = "";
         struct planet_data *planet = planet_base + i;
         fprintf(fp, "\t\t{\n");
         jint(fp, 3, "id", i + 1, ",\n");
         jint(fp, 3, "temperature_class", planet->temperature_class, ",\n");
         jint(fp, 3, "pressure_class", planet->pressure_class, ",\n");
-        fprintf(fp, "\t\t\t\"gases\": [\n");
+        fprintf(fp, "\t\t\t\"gases\": {");
+        gsep = "";
         for (j = 0; j < 4; j++) {
-            fprintf(fp, "\t\t\t\t{\"gas\": %d, \"percentage\": %d}", planet->gas[j], planet->gas_percent[j]);
-            if (j != 3) {
-                fprintf(fp, ",");
+            if (planet->gas[j] == 0 || planet->gas_percent[j] == 0) {
+                continue;
             }
-            fprintf(fp, "\n");
+            fprintf(fp, "%s\"%s\": %d", gsep, gasCode(planet->gas[j]), planet->gas_percent[j]);
+            gsep = ", ";
         }
-        fprintf(fp, "\t\t\t],\n");
+        fprintf(fp, "},\n");
         jint(fp, 3, "diameter", planet->diameter, ",\n");
         jint(fp, 3, "gravity", planet->gravity, ",\n");
         jint(fp, 3, "mining_difficulty", planet->mining_difficulty, ",\n");
@@ -380,6 +383,30 @@ main(int argc, char *argv[]) {
     fclose(fp);
 
     return(0);
+}
+
+/* Gases in planetary atmospheres. */
+const char *
+gasCode(int j) {
+    switch (j) {
+    case H2 : return "H2";  // Hydrogen
+    case CH4: return "CH4";   // Methane
+    case HE : return "HE";  // Helium
+    case NH3: return "NH3";   // Ammonia
+    case N2 : return "N2";  // Nitrogen
+    case CO2: return "CO2";   // Carbon Dioxide
+    case O2 : return "O2";  // Oxygen
+    case HCL: return "HCL";   // Hydrogen Chloride
+    case CL2: return "CL2";   // Chlorine
+    case F2 : return "F2";   // Fluorine
+    case H2O: return "H2O";    // Steam
+    case SO2: return "SO2";    // Sulfur Dioxide
+    case H2S: return "H2S";    // Hydrogen Sulfide
+    default:
+        fprintf(stderr, "assert(gas_code != %d)\n", j);
+        exit(2);
+    }
+    return("??");
 }
 
 const char *
