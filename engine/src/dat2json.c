@@ -162,6 +162,7 @@ main(int argc, char *argv[]) {
 
     fprintf(fp, "\t\"species\": [\n");
     for (species_index = 0; species_index < galaxy.num_species; species_index++) {
+        const char *gsep = "";
         species_number = species_index + 1;
 
         if (!data_in_memory[species_index]) {
@@ -193,15 +194,14 @@ main(int argc, char *argv[]) {
         jint(fp, 4, "orbit", species->pn, "\n");
         fprintf(fp, "\t\t\t},\n");
         fprintf(fp, "\t\t\t\"gases\": {\n");
-        fprintf(fp, "\t\t\t\t\"required\": [{\"gas\": %d, \"min\": %d, \"max\": %d}],\n", species->required_gas, species->required_gas_min, species->required_gas_max);
-        fprintf(fp, "\t\t\t\t\"poison\": [");
+        fprintf(fp, "\t\t\t\t\"required\": {\"%s\": {\"min\": %d, \"max\": %d}},\n", gasCode(species->required_gas), species->required_gas_min, species->required_gas_max);
+        fprintf(fp, "\t\t\t\t\"poison\": {");
+        gsep = "";
         for (j = 0; j < 6; j++) {
-            if (j != 0) {
-                fprintf(fp, ", ");
-            }
-            fprintf(fp, "%d", species->poison_gas[j]);
+            fprintf(fp, "%s\"%s\": true", gsep, gasCode(species->poison_gas[j]));
+            gsep = ", ";
         }
-        fprintf(fp, "]\n");
+        fprintf(fp, "}\n");
         fprintf(fp, "\t\t\t},\n");
         if (species->auto_orders != 0) {
             jbool(fp, 3, "auto_orders", species->auto_orders, ",\n");
