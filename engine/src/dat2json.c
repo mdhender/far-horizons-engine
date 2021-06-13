@@ -191,14 +191,15 @@ main(int argc, char *argv[]) {
     }
     fprintf(fp, "\t],\n");
 
-    fprintf(fp, "\t\"species\": [\n");
+    fprintf(fp, "\t\"species\": {\n");
     for (species_index = 0; species_index < galaxy.num_species; species_index++) {
         const char *gsep = "";
         species_number = species_index + 1;
 
+        fprintf(fp, "\t\t\"SP%02d\": {\n", species_number);
+
         if (!data_in_memory[species_index]) {
-            fprintf(fp, "\t\t{\"id\": \"SP%02d\"}", species_number);
-            jstr(fp, 3, "id", buffer, ",\n");
+            fprintf(fp, "\t\t}");
             if (i + 1 < galaxy.num_species) {
                 fprintf(fp, ",");
             }
@@ -211,7 +212,6 @@ main(int argc, char *argv[]) {
         nampla_base = namp_data[species_number - 1];
         ship_base   = ship_data[species_number - 1];
 
-        fprintf(fp, "\t\t{\n");
         sprintf(buffer, "SP%02d", species_number);
         jstr(fp, 3, "id", buffer, ",\n");
         jstr(fp, 3, "name", species->name, ",\n");
@@ -416,7 +416,7 @@ main(int argc, char *argv[]) {
         }
         fprintf(fp, "\n");
     }
-    fprintf(fp, "\t],\n");
+    fprintf(fp, "\t},\n");
 
     fprintf(fp, "\t\"commands\": {\n");
     for (int i = 1; i < NUM_COMMANDS; i++) {
