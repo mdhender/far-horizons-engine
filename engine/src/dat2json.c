@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "fh.h"
 
@@ -44,7 +45,9 @@ const char *starColor(int j);
 const char *starType(int j);
 const char *techCode(int j);
 const char *transType(int j);
+const char *strlower(const char *s);
 char *strreverse(char *s);
+const char *strupper(const char *s);
 
 int
 main(int argc, char *argv[]) {
@@ -67,7 +70,7 @@ main(int argc, char *argv[]) {
     get_species_data();
 
     fprintf(fp, "{\n");
-    jstr(fp, 1, "version", "7.3.0", ",\n");
+    jstr(fp, 1, "version", "7.4.0", ",\n");
 
     fprintf(fp, "\t\"galaxy\": {\n");
     jint(fp, 2, "turn_number", galaxy.turn_number, ",\n");
@@ -319,8 +322,9 @@ main(int argc, char *argv[]) {
             const char *isep = "";
             nampla = nampla_base + i;
 
-            fprintf(fp, "\t\t\t\t\"%s\": {\n", nampla->name);
+            fprintf(fp, "\t\t\t\t\"%s\": {\n", strupper(nampla->name));
             jint(fp, 5, "id", i + 1, ",\n");
+            jstr(fp, 5, "name", nampla->name, ",\n");
             jstr(fp, 5, "location", mkkey(nampla->x, nampla->y, nampla->z, nampla->pn), ",\n");
             jcoords(fp, 5, "coords", nampla->x, nampla->y, nampla->z, ",\n");
             jint(fp, 5, "orbit", nampla->pn, ",\n");
@@ -372,8 +376,9 @@ main(int argc, char *argv[]) {
             const char *isep = "";
             ship = ship_base + i;
 
-            fprintf(fp, "\t\t\t\t\"%s\": {\n", ship->name);
+            fprintf(fp, "\t\t\t\t\"%s\": {\n", strupper(ship->name));
             jint(fp, 5, "id", i + 1, ",\n");
+            jstr(fp, 5, "name", ship->name, ",\n");
             jstr(fp, 5, "location", mkkey(ship->x, ship->y, ship->z, ship->pn), ",\n");
             jcoords(fp, 5, "coords", ship->x, ship->y, ship->z, ",\n");
             jint(fp, 5, "orbit", ship->pn, ",\n");
@@ -887,6 +892,19 @@ starTypeCode(int j) {
     return " ";
 }
 
+const char *
+strlower(const char *s) {
+    static char buffer[128];
+    int i;
+    for (i = 0; i < 127 && *s != 0; i++) {
+        buffer[i] = tolower(*s);
+        s++;
+    }
+    buffer[i] = 0;
+    return buffer;
+}
+
+
 // reverse the buffer by swapping from the ends
 char *
 strreverse(char *s) {
@@ -899,6 +917,18 @@ strreverse(char *s) {
         begin++;
     }
     return(s);
+}
+
+const char *
+strupper(const char *s) {
+    static char buffer[128];
+    int i;
+    for (i = 0; i < 127 && *s != 0; i++) {
+        buffer[i] = toupper(*s);
+        s++;
+    }
+    buffer[i] = 0;
+    return buffer;
 }
 
 const char *
