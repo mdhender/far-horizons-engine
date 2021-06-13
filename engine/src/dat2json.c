@@ -70,7 +70,7 @@ main(int argc, char *argv[]) {
     get_species_data();
 
     fprintf(fp, "{\n");
-    jstr(fp, 1, "version", "7.4.0", ",\n");
+    jstr(fp, 1, "version", "7.5.0", ",\n");
 
     fprintf(fp, "\t\"galaxy\": {\n");
     jint(fp, 2, "turn_number", galaxy.turn_number, ",\n");
@@ -200,6 +200,7 @@ main(int argc, char *argv[]) {
         species_number = species_index + 1;
 
         fprintf(fp, "\t\t\"SP%02d\": {\n", species_number);
+        jint(fp, 3, "id", species_number, ",\n");
 
         if (!data_in_memory[species_index]) {
             fprintf(fp, "\t\t}");
@@ -215,8 +216,6 @@ main(int argc, char *argv[]) {
         nampla_base = namp_data[species_number - 1];
         ship_base   = ship_data[species_number - 1];
 
-        sprintf(buffer, "SP%02d", species_number);
-        jstr(fp, 3, "id", buffer, ",\n");
         jstr(fp, 3, "name", species->name, ",\n");
         fprintf(fp, "\t\t\t\"government\": {\n");
         jstr(fp, 4, "name", species->govt_name, ",\n");
