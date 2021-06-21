@@ -70,7 +70,7 @@ main(int argc, char *argv[]) {
     get_species_data();
 
     fprintf(fp, "{\n");
-    jstr(fp, 1, "version", "7.5.0", ",\n");
+    jstr(fp, 1, "version", "7.5.1", ",\n");
 
     fprintf(fp, "\t\"galaxy\": {\n");
     jint(fp, 2, "turn_number", galaxy.turn_number, ",\n");
@@ -132,10 +132,10 @@ main(int argc, char *argv[]) {
         }
         fprintf(fp, "],\n");
 
+        fprintf(fp, "\t\t\t\"visited_by\": [");
         for (j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (star->visited_by[j] != 0) {
                 char *vsep = "";
-                fprintf(fp, "\t\t\t\"visited_by\": [");
                 for (int sp = 1; sp <= MAX_SPECIES; sp++) {
                     /* Get array index and bit mask. */
                     int  species_array_index, species_bit_number;
@@ -149,10 +149,10 @@ main(int argc, char *argv[]) {
                         vsep = ", ";
                     }
                 }
-                fprintf(fp, "],\n");
                 break;
             }
         }
+        fprintf(fp, "],\n");
         jint(fp, 3, "message", star->message, "\n");
         fprintf(fp, "\t\t}");
         if (i + 1 < num_stars) {
@@ -252,10 +252,10 @@ main(int argc, char *argv[]) {
         jint(fp, 3, "fleet_cost", species->fleet_cost, ",\n");
         jint(fp, 3, "fleet_percent_cost", species->fleet_percent_cost, ",\n");
 
+        fprintf(fp, "\t\t\t\"contacts\": [");
         for (j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->contact[j] != 0) {
                 char *vsep = "";
-                fprintf(fp, "\t\t\t\"contacts\": [");
                 for (int sp = 1; sp <= MAX_SPECIES; sp++) {
                     /* Get array index and bit mask. */
                     int  species_array_index, species_bit_number;
@@ -269,14 +269,14 @@ main(int argc, char *argv[]) {
                         vsep = ", ";
                     }
                 }
-                fprintf(fp, "],\n");
                 break;
             }
         }
+        fprintf(fp, "],\n");
+        fprintf(fp, "\t\t\t\"allies\": [");
         for (j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->ally[j] != 0) {
                 char *vsep = "";
-                fprintf(fp, "\t\t\t\"allies\": [");
                 for (int sp = 1; sp <= MAX_SPECIES; sp++) {
                     /* Get array index and bit mask. */
                     int  species_array_index, species_bit_number;
@@ -290,14 +290,14 @@ main(int argc, char *argv[]) {
                         vsep = ", ";
                     }
                 }
-                fprintf(fp, "],\n");
                 break;
             }
         }
+        fprintf(fp, "],\n");
+        fprintf(fp, "\t\t\t\"enemies\": [");
         for (j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->enemy[j] != 0) {
                 char *vsep = "";
-                fprintf(fp, "\t\t\t\"enemies\": [");
                 for (int sp = 1; sp <= MAX_SPECIES; sp++) {
                     /* Get array index and bit mask. */
                     int  species_array_index, species_bit_number;
@@ -311,10 +311,10 @@ main(int argc, char *argv[]) {
                         vsep = ", ";
                     }
                 }
-                fprintf(fp, "],\n");
                 break;
             }
         }
+        fprintf(fp, "],\n");
 
         fprintf(fp, "\t\t\t\"namplas\": {\n");
         for (i = 0; i < species->num_namplas; i++) {
