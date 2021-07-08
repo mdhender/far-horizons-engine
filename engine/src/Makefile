@@ -21,6 +21,10 @@ Locations_o = Locations.o utils.o do_locs.o get_gal.o get_plan.o get_star.o sav_
 Locations: $(Locations_o)
 	cc -o ../bin/Locations $(CFLAGS) $(Locations_o)
 
+NoOrders_o = NoOrders.o utils.o parse.o get_gal.o get_plan.o get_star.o abend.o
+NoOrders: $(NoOrders_o)
+	cc -o ../bin/NoOrders $(CFLAGS) $(NoOrders_o)
+
 dat2json_o = dat2json.o abend.o io.o get_gal.o get_star.o get_plan.o get_spec.o
 dat2json: $(dat2json_o)
 	cc -o ../bin/dat2json $(CFLAGS) $(dat2json_o)
@@ -75,7 +79,7 @@ utils.o: utils.c fh.h
 ############################################################################
 .PHONY: clean check
 clean:
-	rm -f $(AsciiToBinary_o) $(BinaryToAscii_o) \
+	rm -f $(AsciiToBinary_o) $(BinaryToAscii_o) $(Locations_o) $(NoOrders_o) \
 		$(dat2json_o) $(sizes_o)
 check:
 	../bin/sizes
