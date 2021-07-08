@@ -48,9 +48,13 @@ struct galaxy_data
     int32_t		turn_number;	/* Current turn number. */
 };
 
-void get_galaxy_data(void);
 void abend(const char *fmt, ...);
+void do_locations(void);
+void free_species_data(void);
+void get_galaxy_data(void);
 void *readFile(const char *filename);
+void save_location_data(void);
+void save_planet_data(void);
 
 //struct galaxy_data *get_galaxy_data (void);
 

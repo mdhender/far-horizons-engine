@@ -1,5 +1,8 @@
-all: AsciiToBinary BinaryToAscii dat2json sizes
+all: AsciiToBinary BinaryToAscii Locations dat2json sizes
 	echo "make all ran successfully"
+
+# uncrustify -c ~/fhc/.uncrustify.cfg Locations.c
+# mv Locations.c.uncrustify Locations.c
 
 ############################################################################
 CFLAGS=-Wno-format-contains-nul
@@ -13,6 +16,10 @@ AsciiToBinary: $(AsciiToBinary_o)
 BinaryToAscii_o = BinaryToAscii.o abend.o get_gal.o get_star.o get_plan.o utils.o
 BinaryToAscii: $(BinaryToAscii_o)
 	cc -o ../bin/BinaryToAscii $(CFLAGS) $(BinaryToAscii_o)
+
+Locations_o = Locations.o utils.o do_locs.o get_gal.o get_plan.o get_star.o sav_plan.o abend.o
+Locations: $(Locations_o)
+	cc -o ../bin/Locations $(CFLAGS) $(Locations_o)
 
 dat2json_o = dat2json.o abend.o io.o get_gal.o get_star.o get_plan.o get_spec.o
 dat2json: $(dat2json_o)
@@ -28,6 +35,9 @@ AsciiToBinary.o: AsciiToBinary.c fh.h
 
 BinaryToAscii.o: BinaryToAscii.c fh.h
 	cc $(CFLAGS) -c BinaryToAscii.c
+
+Locations.o: Locations.c fh.h
+	cc $(CFLAGS) -c Locations.c
 
 abend.o: abend.c fh.h
 	cc $(CFLAGS) -c abend.c

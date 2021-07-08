@@ -202,10 +202,8 @@ save_species_data ()
 }
 
 
-
-free_species_data ()
-
-{
+void
+free_species_data (void) {
     int		species_index;
 
 
@@ -605,10 +603,8 @@ get_location_data ()
 }
 
 
-
-save_location_data ()
-
-{
+void
+save_location_data (void) {
     int		locations_fd;
 
     long	n, num_bytes;
