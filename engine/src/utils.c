@@ -771,38 +771,38 @@ struct nampla_data	*nampla;
 
 /* Get life support tech level needed. */
 
-int life_support_needed (species, home, colony)
-
-struct species_data	*species;
-struct planet_data	*home, *colony;
-
-{
+int
+life_support_needed (struct species_data	*species, struct planet_data	*home, struct planet_data	*colony) {
     int	i, j, k, ls_needed;
 
 
     i = colony->temperature_class - home->temperature_class;
-    if (i < 0) i = -i;
+    if (i < 0) {
+		i = -i;
+	}
     ls_needed = 3 * i;		/* Temperature class. */
 
     i = colony->pressure_class - home->pressure_class;
-    if (i < 0) i = -i;
+    if (i < 0) {
+		i = -i;
+	}
     ls_needed += 3 * i;		/* Pressure class. */
 
     /* Check gases. Assume required gas is NOT present. */
     ls_needed += 3;
-    for (j = 0; j < 4; j++)	/* Check gases on planet. */
-    {
-      if (colony->gas_percent[j] == 0) continue;
-      for (i = 0; i < 6; i++)	/* Compare with poisonous gases. */
-      {
-    	if (species->poison_gas[i] == colony->gas[j])
+    for (j = 0; j < 4; j++)	{ /* Check gases on planet. */
+      if (colony->gas_percent[j] == 0) {
+		  continue;
+		}
+      for (i = 0; i < 6; i++) { /* Compare with poisonous gases. */
+    	if (species->poison_gas[i] == colony->gas[j]){
     	    ls_needed += 3;
+		}
       }
-      if (colony->gas[j] == species->required_gas)
-      {
-        if (colony->gas_percent[j] >= species->required_gas_min
-         && colony->gas_percent[j] <= species->required_gas_max)
-    	ls_needed -= 3;
+      if (colony->gas[j] == species->required_gas) {
+        if (colony->gas_percent[j] >= species->required_gas_min && colony->gas_percent[j] <= species->required_gas_max) {
+    		ls_needed -= 3;
+		}
       }
     }
 
