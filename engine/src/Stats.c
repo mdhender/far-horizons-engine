@@ -84,7 +84,7 @@ main(int argc, char *argv[]) {
     /* Print header. */
     printf("SP Species               Tech Levels        Total  Num Num  Num  Offen.  Defen.  Econ\n");
     printf(" # Name             MI  MA  ML  GV  LS  BI  Prod.  Pls Shps Yrds  Power   Power  Units\n");
-    printf("--------------------------------------------------------------------------------------\n");
+    printf("----------------------------------------------------------------------------------------\n");
 
     /* Main loop. For each species, take appropriate action. */
     for (species_number = 1; species_number <= galaxy.num_species; species_number++) {
