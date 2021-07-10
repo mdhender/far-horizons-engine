@@ -48,14 +48,6 @@ struct galaxy_data
     int32_t		turn_number;	/* Current turn number. */
 };
 
-void abend(const char *fmt, ...);
-void do_locations(void);
-void free_species_data(void);
-void get_galaxy_data(void);
-void *readFile(const char *filename);
-void save_location_data(void);
-void save_planet_data(void);
-
 //struct galaxy_data *get_galaxy_data (void);
 
 
@@ -684,3 +676,13 @@ struct trans_data
     extern char			command_name[NUM_COMMANDS][16];
     
 #endif
+
+void abend(const char *fmt, ...);
+char *commas (long value);
+void do_locations(void);
+void free_species_data(void);
+void get_galaxy_data(void);
+int life_support_needed (struct species_data *species, struct planet_data *home, struct planet_data	*colony);
+void *readFile(const char *filename);
+void save_location_data(void);
+void save_planet_data(void);

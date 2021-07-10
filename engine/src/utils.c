@@ -1,5 +1,6 @@
-
 #include "fh.h"
+
+void exit(int status); // should use stdlib directly
 
 /* This routine will return a random int between 1 and max, inclusive.
    It uses the so-called "Algorithm M" method, which is a combination
@@ -50,89 +51,75 @@ long	extra_ships = NUM_EXTRA_SHIPS;
 
 extern struct galaxy_data	galaxy;
 
-
-get_species_data ()
-
-{
+void
+get_species_data (void) {
     int		species_fd, species_index;
-
     long	n, num_bytes;
-
     char	filename[16];
-
     struct species_data		*sp;
 
+	for (species_index = 0; species_index < galaxy.num_species; species_index++) {
+		data_modified[species_index] = FALSE;
 
-    for (species_index = 0; species_index < galaxy.num_species; species_index++)
-    {
-	data_modified[species_index] = FALSE;
+		sp = &spec_data[species_index];
 
-	sp = &spec_data[species_index];
+		/* Open the species data file. */
+		sprintf (filename, "sp%02d.dat\0", species_index + 1);
+		species_fd = open (filename, 0);
+		if (species_fd < 0) {
+			sp->pn = 0;	/* Extinct! */
+			data_in_memory[species_index] = FALSE;
+			continue;
+		}
 
-	/* Open the species data file. */
-	sprintf (filename, "sp%02d.dat\0", species_index + 1);
-	species_fd = open (filename, 0);
-	if (species_fd < 0)
-	{
-	    sp->pn = 0;	/* Extinct! */
-	    data_in_memory[species_index] = FALSE;
-	    continue;
+		/* Read in species data. */
+		num_bytes = read (species_fd, sp, sizeof(struct species_data));
+		if (num_bytes != sizeof(struct species_data)) {
+			fprintf (stderr, "\n\tCannot read species record in file '%s'!\n\n",
+			filename);
+			exit (-1);
+		}
+
+		/* Allocate enough memory for all namplas. */
+		num_bytes = (sp->num_namplas + extra_namplas) * sizeof (struct nampla_data);
+		namp_data[species_index] = (struct nampla_data *) malloc (num_bytes);
+		if (namp_data[species_index] == NULL) {
+			fprintf (stderr, "\nCannot allocate enough memory for nampla data!\n\n");
+			exit (-1);
+		}
+
+		/* Read it all into memory. */
+		num_bytes = (long) sp->num_namplas * sizeof (struct nampla_data);
+		n = read (species_fd, namp_data[species_index], num_bytes);
+		if (n != num_bytes) {
+			fprintf (stderr, "\nCannot read nampla data into memory!\n\n");
+			exit (-1);
+		}
+
+		/* Allocate enough memory for all ships. */
+		num_bytes = (sp->num_ships + extra_ships) * sizeof (struct ship_data);
+		ship_data[species_index] = (struct ship_data *) malloc (num_bytes);
+		if (ship_data[species_index] == NULL) {
+			fprintf (stderr, "\nCannot allocate enough memory for ship data!\n\n");
+			exit (-1);
+		}
+
+		if (sp->num_ships > 0) {
+			/* Read it all into memory. */
+			num_bytes = (long) sp->num_ships * sizeof (struct ship_data);
+			n = read (species_fd, ship_data[species_index], num_bytes);
+			if (n != num_bytes) {
+				fprintf (stderr, "\nCannot read ship data into memory!\n\n");
+				exit (-1);
+			}
+		}
+
+		close (species_fd);
+
+		data_in_memory[species_index] = TRUE;
+		num_new_namplas[species_index] = 0;
+		num_new_ships[species_index] = 0;
 	}
-
-	/* Read in species data. */
-	num_bytes = read (species_fd, sp, sizeof(struct species_data));
-	if (num_bytes != sizeof(struct species_data))
-	{
-	    fprintf (stderr, "\n\tCannot read species record in file '%s'!\n\n",
-	    	filename);
-	    exit (-1);
-	}
-
-	/* Allocate enough memory for all namplas. */
-	num_bytes = (sp->num_namplas + extra_namplas) * sizeof (struct nampla_data);
-	namp_data[species_index] = (struct nampla_data *) malloc (num_bytes);
-	if (namp_data[species_index] == NULL)
-	{
-	    fprintf (stderr, "\nCannot allocate enough memory for nampla data!\n\n");
-	    exit (-1);
-	}
-
-	/* Read it all into memory. */
-	num_bytes = (long) sp->num_namplas * sizeof (struct nampla_data);
-	n = read (species_fd, namp_data[species_index], num_bytes);
-	if (n != num_bytes)
-	{
-	    fprintf (stderr, "\nCannot read nampla data into memory!\n\n");
-	    exit (-1);
-	}
-
-	/* Allocate enough memory for all ships. */
- 	num_bytes = (sp->num_ships + extra_ships) * sizeof (struct ship_data);
-	ship_data[species_index] = (struct ship_data *) malloc (num_bytes);
-	if (ship_data[species_index] == NULL)
-	{
-	    fprintf (stderr, "\nCannot allocate enough memory for ship data!\n\n");
-	    exit (-1);
-	}
-
-	if (sp->num_ships > 0)
-	{
-	    /* Read it all into memory. */
-	    num_bytes = (long) sp->num_ships * sizeof (struct ship_data);
-	    n = read (species_fd, ship_data[species_index], num_bytes);
-	    if (n != num_bytes)
-	    {
-	        fprintf (stderr, "\nCannot read ship data into memory!\n\n");
-	        exit (-1);
-	    }
-	}
-
-	close (species_fd);
-
-	data_in_memory[species_index] = TRUE;
-	num_new_namplas[species_index] = 0;
-	num_new_ships[species_index] = 0;
-    }
 }
 
 
@@ -268,57 +255,46 @@ struct nampla_data	*nampla;
 
 
 
-/* This routine is intended to take a long argument and return a pointer
-   to a string that has embedded commas to make the string more readable. */
+// This routine is intended to take a long argument and return a pointer
+// to a string that has embedded commas to make the string more readable.
+// Return a static buffer rather than allocating memory.
+char *
+commas (long value) {
+	static char	result_plus_commas[33];
 
-char	result_plus_commas[33];
-
-char *commas (value)
-
-long	value;
-
-{
     int		i, j, n, length, negative;
-
     char	*ptr, temp[32];
-
     long	abs_value;
 
-
-    if (value < 0)
-    {
-	abs_value = -value;
-	negative = TRUE;
+    if (value < 0)     {
+		abs_value = -value;
+		negative = TRUE;
+    } else {
+		abs_value = value;
+		negative = FALSE;
     }
-    else
-    {
-	abs_value = value;
-	negative = FALSE;
-    }
-
     sprintf (temp, "%ld\0", abs_value);
-
     length = strlen (temp);
-
     i = length - 1;
     j = 31;
     result_plus_commas[32] = '\0';
-    for (n = 0; n < length; n++)
-    {
-	result_plus_commas[j--] = temp[i--];
-	if (j % 4  ==  0)
-	    result_plus_commas[j--] = ',';
+    for (n = 0; n < length; n++) {
+		result_plus_commas[j--] = temp[i--];
+		if (j % 4  ==  0) {
+	    	result_plus_commas[j--] = ',';
+		}
     }
-
     j++;
-    if (result_plus_commas[j] == ',') j++;
+    if (result_plus_commas[j] == ',') {
+		j++;
+	}
 
-    if (negative)
-	result_plus_commas[--j] = '-';
+    if (negative) {
+		result_plus_commas[--j] = '-';
+	}
 
     return &result_plus_commas[j];
 }
-
 
 
 /* This routine will return a pointer to a string containing a complete
@@ -770,43 +746,41 @@ struct nampla_data	*nampla;
 }
 
 /* Get life support tech level needed. */
-
 int
-life_support_needed (struct species_data	*species, struct planet_data	*home, struct planet_data	*colony) {
-    int	i, j, k, ls_needed;
+life_support_needed (struct species_data *species, struct planet_data *home, struct planet_data	*colony) {
+	int	i, j, k, ls_needed;
 
-
-    i = colony->temperature_class - home->temperature_class;
-    if (i < 0) {
+	i = colony->temperature_class - home->temperature_class;
+	if (i < 0) {
 		i = -i;
 	}
-    ls_needed = 3 * i;		/* Temperature class. */
+	ls_needed = 3 * i;		/* Temperature class. */
 
-    i = colony->pressure_class - home->pressure_class;
-    if (i < 0) {
+	i = colony->pressure_class - home->pressure_class;
+	if (i < 0) {
 		i = -i;
 	}
-    ls_needed += 3 * i;		/* Pressure class. */
+	ls_needed += 3 * i;		/* Pressure class. */
 
-    /* Check gases. Assume required gas is NOT present. */
-    ls_needed += 3;
-    for (j = 0; j < 4; j++)	{ /* Check gases on planet. */
-      if (colony->gas_percent[j] == 0) {
-		  continue;
+	/* Check gases. Assume required gas is NOT present. */
+	ls_needed += 3;
+	for (j = 0; j < 4; j++)	{ /* Check gases on planet. */
+		if (colony->gas_percent[j] == 0) {
+			continue;
 		}
-      for (i = 0; i < 6; i++) { /* Compare with poisonous gases. */
-    	if (species->poison_gas[i] == colony->gas[j]){
-    	    ls_needed += 3;
+		for (i = 0; i < 6; i++) { /* Compare with poisonous gases. */
+			if (species->poison_gas[i] == colony->gas[j]){
+				ls_needed += 3;
+			}
 		}
-      }
-      if (colony->gas[j] == species->required_gas) {
-        if (colony->gas_percent[j] >= species->required_gas_min && colony->gas_percent[j] <= species->required_gas_max) {
-    		ls_needed -= 3;
+		if (colony->gas[j] == species->required_gas) {
+			if (colony->gas_percent[j] >= species->required_gas_min && colony->gas_percent[j] <= species->required_gas_max) {
+				ls_needed -= 3;
+			}
 		}
-      }
-    }
+	}
 
-    return ls_needed;
+	return ls_needed;
 }
 
 
