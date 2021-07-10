@@ -291,7 +291,7 @@ main(int argc, char *argv[]) {
 
         printf("%5d", num_ships);
         printf("%5d", num_yards);
-        printf("%8ld%8ld\n", total_offensive_power, total_defensive_power);
+        printf("%8ld%8ld", total_offensive_power, total_defensive_power);
 
 		totalBankedEconUnits += species->econ_units;
 		if (species_number == 1) {
