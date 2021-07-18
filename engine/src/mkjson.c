@@ -62,8 +62,9 @@ main(int argc, char *argv[]) {
     fprintf(fp, "\t},\n");
 
     fprintf(fp, "\t\"stars\": [\n");
+    num_stars = 1;
     for (int i = 0; i < num_stars; i++) {
-        star = star_base + i;
+        struct star_data *star = star_base + i;
         fprintf(fp, "\t\t{\n");
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "id", i);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "color", star->color);
@@ -79,7 +80,7 @@ main(int argc, char *argv[]) {
                 char *vsep = "";
                 for (int sp = 1; sp <= MAX_SPECIES; sp++) {
                     if (isset(sp, star->visited_by)) {
-                        fprintf(fp, "%s%2d", vsep, sp);
+                        fprintf(fp, "%s%d", vsep, sp);
                         vsep = ", ";
                     }
                 }
@@ -103,6 +104,27 @@ main(int argc, char *argv[]) {
     fprintf(fp, "\t],\n");
 
     fprintf(fp, "\t\"planets\": [\n");
+    for (int i = 0; i < num_planets; i++) {
+        struct planet_data *planet = planet_base + i;
+        fprintf(fp, "\t\t{\n");
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "id", i);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "diameter", planet->diameter);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "econ_efficiency", planet->econ_efficiency);
+        fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d],\n", "gas", planet->gas[0], planet->gas[1], planet->gas[2], planet->gas[3]);
+        fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d],\n", "gas_percent", planet->gas_percent[0], planet->gas_percent[1], planet->gas_percent[2], planet->gas_percent[3]);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "gravity", planet->gravity);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "md_increase", planet->md_increase);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "message", planet->message);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "mining_difficulty", planet->mining_difficulty);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "pressure_class", planet->pressure_class);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "special", planet->special);
+        fprintf(fp, "\t\t\t\"%s\": %d\n", "temperature_class", planet->temperature_class);
+        if (i + 1 < num_planets) {
+            fprintf(fp, "\t\t},\n");
+        } else {
+            fprintf(fp, "\t\t}\n");
+        }
+    }
     fprintf(fp, "\t],\n");
 
     fprintf(fp, "\t\"species\": [\n");
@@ -120,3 +142,5 @@ main(int argc, char *argv[]) {
 
     return 0;
 }
+
+
