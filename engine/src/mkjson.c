@@ -136,7 +136,6 @@ main(int argc, char *argv[]) {
         int species_number = i + 1;
         struct species_data *species     = &spec_data[species_number - 1];
         struct nampla_data  *nampla_base = namp_data[species_number - 1];
-        struct ship_data    *ship_base   = ship_data[species_number - 1];
         fprintf(fp, "\t\t{\n");
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "id", species_number);
         fprintf(fp, "\t\t\t\"%s\": [", "ally");
@@ -201,6 +200,19 @@ main(int argc, char *argv[]) {
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "required_gas_max", species->required_gas_max);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "required_gas_min", species->required_gas_min);
         fprintf(fp, "\t\t\t\"%s\": [\n", "ships");
+        for (int j = 0; j < species->num_ships; j++) {
+            const char *sep = "";
+            struct ship_data *ship_base = ship_data[species_number - 1];
+            struct ship_data *ship = ship_base + j;
+            fprintf(fp, "\t\t\t\t{\n");
+            fprintf(fp, "\t\t\t\t\"%s\": %d,\n", "id", j);
+            fprintf(fp, "\t\t\t\t\"%s\": \"%s\"\n", "name", ship->name);
+            if (i + 1 < num_species) {
+                fprintf(fp, "\t\t\t\t},\n");
+            } else {
+                fprintf(fp, "\t\t\t\t}\n");
+            }
+        }
         fprintf(fp, "\t\t\t],\n");
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "tech_eps", species->tech_eps[0], species->tech_eps[1], species->tech_eps[2], species->tech_eps[3], species->tech_eps[4], species->tech_eps[5]);
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "tech_knowledge", species->tech_knowledge[0], species->tech_knowledge[1], species->tech_knowledge[2], species->tech_knowledge[3], species->tech_knowledge[4], species->tech_knowledge[5]);
