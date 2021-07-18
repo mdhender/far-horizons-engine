@@ -139,7 +139,7 @@ main(int argc, char *argv[]) {
         struct ship_data    *ship_base   = ship_data[species_number - 1];
         fprintf(fp, "\t\t{\n");
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "id", species_number);
-        fprintf(fp, "\t\t\t\"%s\": [\n", "ally");
+        fprintf(fp, "\t\t\t\"%s\": [", "ally");
         for (int j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->ally[j] != 0) {
                 char *vsep = "";
@@ -154,7 +154,7 @@ main(int argc, char *argv[]) {
         }
         fprintf(fp, "],\n");
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "auto_orders", species->auto_orders);
-        fprintf(fp, "\t\t\t\"%s\": [\n", "contact");
+        fprintf(fp, "\t\t\t\"%s\": [", "contact");
         for (int j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->contact[j] != 0) {
                 char *vsep = "";
@@ -169,7 +169,7 @@ main(int argc, char *argv[]) {
         }
         fprintf(fp, "],\n");
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "econ_units", species->econ_units);
-        fprintf(fp, "\t\t\t\"%s\": [\n", "enemy");
+        fprintf(fp, "\t\t\t\"%s\": [", "enemy");
         for (int j = 0; j < NUM_CONTACT_WORDS; j++) {
             if (species->enemy[j] != 0) {
                 char *vsep = "";
