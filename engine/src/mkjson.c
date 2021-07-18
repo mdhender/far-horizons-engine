@@ -30,32 +30,55 @@ void get_star_data(void);
 
 const char *semver = "7.5.2";
 
-void fgalaxy() {
-    // create the output file
-    FILE *fp = fopen("galaxy.json", "w");
-    if (fp == NULL) {
-        fprintf(stderr, "Cannot create output file 'galaxy.json'!\n");
-        return;
-    }
-    fprintf(fp, "{\n");
-    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
-    fprintf(fp, "\t\"d_num_species\": %d,\n", galaxy.d_num_species);
-    fprintf(fp, "\t\"num_species\": %d,\n", galaxy.num_species);
-    fprintf(fp, "\t\"radius\": %d,\n", galaxy.radius);
-    fprintf(fp, "\t\"turn_number\": %d,\n", galaxy.turn_number);
-    fprintf(fp, "}\n");
-    fclose(fp);
-}
-
 int
 main(int argc, char *argv[]) {
+    FILE *fp;
+
     /* Get all binary data. */
     get_galaxy_data();
     get_star_data();
     get_planet_data();
     get_species_data();
 
-    fgalaxy();
+    fp = fopen("galaxy.json", "w");
+    if (fp == NULL) {
+        fprintf(stderr, "Cannot create output file 'galaxy.json'!\n");
+        return 2;
+    }
+    fprintf(fp, "{\n");
+    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
+    fprintf(fp, "\t\"data\": {\n");
+    fprintf(fp, "\t\t\"d_num_species\": %d,\n", galaxy.d_num_species);
+    fprintf(fp, "\t\t\"num_species\": %d,\n", galaxy.num_species);
+    fprintf(fp, "\t\t\"radius\": %d,\n", galaxy.radius);
+    fprintf(fp, "\t\t\"turn_number\": %d,\n", galaxy.turn_number);
+    fprintf(fp, "\t}\n");
+    fprintf(fp, "}\n");
+    fclose(fp);
+
+    fp = fopen("stars.json", "w");
+    if (fp == NULL) {
+        fprintf(stderr, "Cannot create output file 'stars.json'!\n");
+        return 2;
+    }
+    fprintf(fp, "{\n");
+    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
+    fprintf(fp, "\t\"data\": [\n");
+    fprintf(fp, "\t]\n");
+    fprintf(fp, "}\n");
+    fclose(fp);
+
+    fp = fopen("planets.json", "w");
+    if (fp == NULL) {
+        fprintf(stderr, "Cannot create output file 'planets.json'!\n");
+        return 2;
+    }
+    fprintf(fp, "{\n");
+    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
+    fprintf(fp, "\t\"data\": [\n");
+    fprintf(fp, "\t]\n");
+    fprintf(fp, "}\n");
+    fclose(fp);
 
     return 0;
 }
