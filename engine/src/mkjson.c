@@ -46,8 +46,8 @@ main(int argc, char *argv[]) {
     get_planet_data();
     get_species_data();
 
-    num_stars = 1;
-    num_planets = 1;
+    // num_stars = 1;
+    // num_planets = 1;
     num_species = galaxy.num_species;
 
     fp = fopen("galaxy.json", "w");
