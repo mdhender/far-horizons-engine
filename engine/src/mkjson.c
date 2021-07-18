@@ -246,7 +246,34 @@ main(int argc, char *argv[]) {
             struct ship_data *ship = ship_base + j;
             fprintf(fp, "\t\t\t\t{\n");
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "id", j);
-            fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\"\n", "name", ship->name);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "age", ship->age);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "arrived_via_wormhole", ship->arrived_via_wormhole);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "class", ship->class);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "dest_x", ship->dest_x);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "dest_y", ship->dest_y);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "dest_z", ship->dest_z);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "just_jumped", ship->just_jumped);
+            fprintf(fp, "\t\t\t\t\t\"%s\": [", "item_quantity");
+            for (int k = 0; k < MAX_ITEMS; k++) {
+                if (k != 0) {
+                    fprintf(fp, ",");
+                }
+                fprintf(fp, "%d", ship->item_quantity[k]);
+            }
+            fprintf(fp, "]\n,");
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "loading_point", ship->loading_point);
+            fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\",\n", "name", ship->name);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "pn", ship->pn);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "remaining_cost", ship->remaining_cost);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "special", ship->special);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "status", ship->status);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "tonnage", ship->tonnage);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "type", ship->type);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "unloading_point", ship->unloading_point);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "x", ship->x);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "y", ship->y);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d\n", "z", ship->z);
+
             if (j + 1 < species->num_ships) {
                 fprintf(fp, "\t\t\t\t},\n");
             } else {
