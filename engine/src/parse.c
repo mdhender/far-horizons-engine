@@ -8,13 +8,6 @@ char  original_name[32], upper_name[32];
 long  value;
 FILE *input_file;
 
-void fix_separator(void);
-int get_command(void);
-int get_class_abbr(void);
-int get_name(void);
-void skip_junk(void);
-void skip_whitespace(void);
-
 char *fgetln(char *dst, int len, FILE *fp) {
     static char mbuf[1024];
     int         i, k;
@@ -104,8 +97,6 @@ skip_whitespace(void) {
         }
     }
 }
-
-
 
 /* The following "get" routines will return 0 if the item found was not
  * of the appropriate type, and 1 or greater if an item of the correct

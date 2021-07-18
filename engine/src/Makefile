@@ -75,11 +75,17 @@ do_jump.o: do_jump.c fh.h
 do_move.o: do_move.c fh.h
 	cc $(CFLAGS) -c do_move.c
 
-do_vis.o: do_vis.c fh.h
-	cc $(CFLAGS) -c do_vis.c
+do_name.o: do_name.c fh.h
+	cc $(CFLAGS) -c do_name.c
+
+do_rename.o: do_rename.c fh.h
+	cc $(CFLAGS) -c do_rename.c
 
 do_worm.o: do_worm.c fh.h
 	cc $(CFLAGS) -c do_worm.c
+
+do_vis.o: do_vis.c fh.h
+	cc $(CFLAGS) -c do_vis.c
 
 gam_abo.o: gam_abo.c fh.h
 	cc $(CFLAGS) -c gam_abo.c

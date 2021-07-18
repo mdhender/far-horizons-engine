@@ -400,7 +400,7 @@ struct trans_data
 #define DESTROY		10
 #define	DEVELOP		11
 #define DISBAND		12
-#define	END		13
+#define	END			13
 #define ENEMY		14
 #define	ENGAGE		15
 #define	ESTIMATE	16
@@ -421,27 +421,27 @@ struct trans_data
 #define PJUMP		31
 #define	PRODUCTION	32
 #define	RECYCLE		33
-#define REPAIR		34
-#define	RESEARCH	35
-#define	SCAN		36
-#define	SEND		37
-#define	SHIPYARD	38
-#define	START		39
-#define SUMMARY		40
-#define	SURRENDER	41
-#define TARGET		42
-#define	TEACH		43
-#define	TECH		44
-#define TELESCOPE	45
-#define TERRAFORM	46
-#define	TRANSFER	47
-#define UNLOAD		48
-#define	UPGRADE		49
-#define	VISITED		50
-#define	WITHDRAW	51
-#define WORMHOLE	52
-#define	ZZZ		53
-
+#define RENAME      34
+#define REPAIR		35
+#define	RESEARCH	36
+#define	SCAN		37
+#define	SEND		38
+#define	SHIPYARD	39
+#define	START		40
+#define SUMMARY		41
+#define	SURRENDER	42
+#define TARGET		43
+#define	TEACH		44
+#define	TECH		45
+#define TELESCOPE	46
+#define TERRAFORM	47
+#define	TRANSFER	48
+#define UNLOAD		49
+#define	UPGRADE		50
+#define	VISITED		51
+#define	WITHDRAW	52
+#define WORMHOLE	53
+#define	ZZZ			54
 #define	NUM_COMMANDS	ZZZ+1
 
 /* Constants needed for parsing. */
@@ -628,9 +628,10 @@ struct trans_data
 		"   ", "ALL", "AMB", "ATT", "AUT", "BAS", "BAT", "BUI", "CON",
 		"DEE", "DES", "DEV", "DIS", "END", "ENE", "ENG", "EST", "HAV",
 		"HID", "HIJ", "IBU", "ICO", "INS", "INT", "JUM", "LAN", "MES",
-		"MOV", "NAM", "NEU", "ORB", "PJU", "PRO", "REC", "REP", "RES",
-		"SCA", "SEN", "SHI", "STA", "SUM", "SUR", "TAR", "TEA", "TEC",
-		"TEL", "TER", "TRA", "UNL", "UPG", "VIS", "WIT", "WOR", "ZZZ"
+		"MOV", "NAM", "NEU", "ORB", "PJU", "PRO", "REC", "REN", "REP",
+		"RES", "SCA", "SEN", "SHI", "STA", "SUM", "SUR", "TAR", "TEA",
+		"TEC", "TEL", "TER", "TRA", "UNL", "UPG", "VIS", "WIT", "WOR",
+		"ZZZ"
 	};
 
     char
@@ -641,8 +642,8 @@ struct trans_data
 		"Disband", "End", "Enemy", "Engage", "Estimate", "Haven",
 		"Hide", "Hijack", "Ibuild", "Icontinue", "Install", "Intercept",
 		"Jump", "Land", "Message", "Move", "Name", "Neutral", "Orbit",
-		"Pjump", "Production", "Recycle", "Repair", "Research", "Scan",
-		"Send", "Shipyard", "Start", "Summary", "Surrender", "Target",
+		"Pjump", "Production", "Recycle", "Rename", "Repair", "Research",
+		"Scan", "Send", "Shipyard", "Start", "Summary", "Surrender", "Target",
 		"Teach", "Tech", "Telescope", "Terraform", "Transfer", "Unload",
 		"Upgrade", "Visited", "Withdraw", "Wormhole", "ZZZ"
 	};
@@ -679,10 +680,40 @@ struct trans_data
 
 void abend(const char *fmt, ...);
 char *commas (long value);
+void delete_nampla(struct nampla_data *nampla);
+void delete_ship(struct ship_data *ship);
+int disbanded_ship(struct ship_data *ship);
 void do_locations(void);
+void do_jump_orders(void);
+void do_JUMP_command(int jumped_in_combat, int using_jump_portal);
+void do_MOVE_command(void);
+void do_RENAME_command(void);
+void do_VISITED_command(void);
+void do_WORMHOLE_command (void);
 void free_species_data(void);
+void fix_separator(void);
+void gamemaster_abort_option(void);
+int get_command(void);
+int get_class_abbr(void);
 void get_galaxy_data(void);
+int get_location(void);
+int get_name(void);
+int get_ship(void);
+void get_transaction_data(void);
 int life_support_needed (struct species_data *species, struct planet_data *home, struct planet_data	*colony);
+void log_char(char c);
+void log_int(int value);
+void log_long(long value);
+void log_string (char string[]);
 void *readFile(const char *filename);
+int rnd(unsigned int max);
 void save_location_data(void);
 void save_planet_data(void);
+void save_species_data(void);
+void save_star_data(void);
+void save_transaction_data(void);
+char *ship_name(struct ship_data *ship);
+void skip_whitespace(void);
+void skip_junk(void);
+void skip_whitespace(void);
+int star_visited(int x, int y, int z);
