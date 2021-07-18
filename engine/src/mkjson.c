@@ -210,7 +210,7 @@ main(int argc, char *argv[]) {
             fprintf(fp, "]\n,");
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_needed", nampla->IUs_needed);
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_to_install", nampla->IUs_to_install);
-            fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\"\n", "name", nampla->name);
+            fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\",\n", "name", nampla->name);
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "planet_index", nampla->planet_index);
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "pn", nampla->pn);
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "pop_units", nampla->pop_units);
