@@ -46,8 +46,8 @@ main(int argc, char *argv[]) {
     get_planet_data();
     get_species_data();
 
-    // num_stars = 1;
-    // num_planets = 1;
+    num_stars = 1;
+    num_planets = 1;
     num_species = galaxy.num_species;
 
     fp = fopen("galaxy.json", "w");
@@ -63,7 +63,7 @@ main(int argc, char *argv[]) {
     fprintf(fp, "\t\t\"%s\": %d,\n", "d_num_species", galaxy.d_num_species);
     fprintf(fp, "\t\t\"%s\": %d,\n", "num_species", galaxy.num_species);
     fprintf(fp, "\t\t\"%s\": %d,\n", "radius", galaxy.radius);
-    fprintf(fp, "\t\t\"%s\": %d,\n", "turn_number", galaxy.turn_number);
+    fprintf(fp, "\t\t\"%s\": %d\n", "turn_number", galaxy.turn_number);
     fprintf(fp, "\t},\n");
 
     fprintf(fp, "\t\"stars\": [\n");
@@ -190,6 +190,8 @@ main(int argc, char *argv[]) {
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "hp_original_base", species->hp_original_base);
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "init_tech_level", species->init_tech_level[0], species->init_tech_level[1], species->init_tech_level[2], species->init_tech_level[3], species->init_tech_level[4], species->init_tech_level[5]);
         fprintf(fp, "\t\t\t\"%s\": \"%s\",\n", "name", species->name);
+        fprintf(fp, "\t\t\t\"%s\": [\n", "namplas");
+        fprintf(fp, "\t\t\t],\n");
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "neutral_gas", species->neutral_gas[0], species->neutral_gas[1], species->neutral_gas[2], species->neutral_gas[3], species->neutral_gas[4], species->neutral_gas[5]);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "num_namplas", species->num_namplas);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "num_ships", species->num_ships);
@@ -198,6 +200,8 @@ main(int argc, char *argv[]) {
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "required_gas", species->required_gas);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "required_gas_max", species->required_gas_max);
         fprintf(fp, "\t\t\t\"%s\": %d,\n", "required_gas_min", species->required_gas_min);
+        fprintf(fp, "\t\t\t\"%s\": [\n", "ships");
+        fprintf(fp, "\t\t\t],\n");
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "tech_eps", species->tech_eps[0], species->tech_eps[1], species->tech_eps[2], species->tech_eps[3], species->tech_eps[4], species->tech_eps[5]);
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "tech_knowledge", species->tech_knowledge[0], species->tech_knowledge[1], species->tech_knowledge[2], species->tech_knowledge[3], species->tech_knowledge[4], species->tech_knowledge[5]);
         fprintf(fp, "\t\t\t\"%s\": [%d,%d,%d,%d,%d,%d],\n", "tech_level", species->tech_level[0], species->tech_level[1], species->tech_level[2], species->tech_level[3], species->tech_level[4], species->tech_level[5]);
