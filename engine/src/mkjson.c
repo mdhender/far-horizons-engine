@@ -31,6 +31,11 @@ void get_star_data(void);
 const char *semver = "7.5.2";
 
 int
+isset(int species_number, int32_t set[]) {
+    return set[(species_number - 1) / 32] & (1 << ((species_number - 1) % 32));
+}
+
+int
 main(int argc, char *argv[]) {
     FILE *fp;
 
@@ -50,17 +55,63 @@ main(int argc, char *argv[]) {
     fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
 
     fprintf(fp, "\t\"galaxy\": {\n");
-    fprintf(fp, "\t\t\"d_num_species\": %d,\n", galaxy.d_num_species);
-    fprintf(fp, "\t\t\"num_species\": %d,\n", galaxy.num_species);
-    fprintf(fp, "\t\t\"radius\": %d,\n", galaxy.radius);
-    fprintf(fp, "\t\t\"turn_number\": %d,\n", galaxy.turn_number);
+    fprintf(fp, "\t\t\"%s\": %d,\n", "d_num_species", galaxy.d_num_species);
+    fprintf(fp, "\t\t\"%s\": %d,\n", "num_species", galaxy.num_species);
+    fprintf(fp, "\t\t\"%s\": %d,\n", "radius", galaxy.radius);
+    fprintf(fp, "\t\t\"%s\": %d,\n", "turn_number", galaxy.turn_number);
     fprintf(fp, "\t},\n");
 
     fprintf(fp, "\t\"stars\": [\n");
+    for (int i = 0; i < num_stars; i++) {
+        star = star_base + i;
+        fprintf(fp, "\t\t{\n");
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "id", i);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "color", star->color);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "home_system", star->home_system);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "message", star->message);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "num_planets", star->num_planets);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "planet_index", star->planet_index);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "size", star->size);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "type", star->type);
+        fprintf(fp, "\t\t\t\"%s\": [", "visited_by");
+        for (int j = 0; j < NUM_CONTACT_WORDS; j++) {
+            if (star->visited_by[j] != 0) {
+                char *vsep = "";
+                for (int sp = 1; sp <= MAX_SPECIES; sp++) {
+                    if (isset(sp, star->visited_by)) {
+                        fprintf(fp, "%s%2d", vsep, sp);
+                        vsep = ", ";
+                    }
+                }
+                break;
+            }
+        }
+        fprintf(fp, "],\n");
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "worm_here", star->worm_here);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "worm_x", star->worm_x);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "worm_y", star->worm_y);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "worm_z", star->worm_z);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "x", star->x);
+        fprintf(fp, "\t\t\t\"%s\": %d,\n", "y", star->y);
+        fprintf(fp, "\t\t\t\"%s\": %d\n", "z", star->z);
+        if (i + 1 < num_stars) {
+            fprintf(fp, "\t\t},\n");
+        } else {
+            fprintf(fp, "\t\t}\n");
+        }
+    }
     fprintf(fp, "\t],\n");
-    fclose(fp);
 
     fprintf(fp, "\t\"planets\": [\n");
+    fprintf(fp, "\t],\n");
+
+    fprintf(fp, "\t\"species\": [\n");
+    fprintf(fp, "\t],\n");
+
+    fprintf(fp, "\t\"locations\": [\n");
+    fprintf(fp, "\t],\n");
+
+    fprintf(fp, "\t\"transactions\": [\n");
     fprintf(fp, "\t]\n");
 
     fprintf(fp, "}\n");
