@@ -207,7 +207,7 @@ main(int argc, char *argv[]) {
                 }
                 fprintf(fp, "%d", nampla->item_quantity[k]);
             }
-            fprintf(fp, "]\n,");
+            fprintf(fp, "],\n");
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_needed", nampla->IUs_needed);
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_to_install", nampla->IUs_to_install);
             fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\",\n", "name", nampla->name);
