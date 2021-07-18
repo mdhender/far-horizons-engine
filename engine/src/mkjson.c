@@ -45,39 +45,26 @@ main(int argc, char *argv[]) {
         fprintf(stderr, "Cannot create output file 'galaxy.json'!\n");
         return 2;
     }
+
     fprintf(fp, "{\n");
     fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
-    fprintf(fp, "\t\"data\": {\n");
+
+    fprintf(fp, "\t\"galaxy\": {\n");
     fprintf(fp, "\t\t\"d_num_species\": %d,\n", galaxy.d_num_species);
     fprintf(fp, "\t\t\"num_species\": %d,\n", galaxy.num_species);
     fprintf(fp, "\t\t\"radius\": %d,\n", galaxy.radius);
     fprintf(fp, "\t\t\"turn_number\": %d,\n", galaxy.turn_number);
-    fprintf(fp, "\t}\n");
-    fprintf(fp, "}\n");
+    fprintf(fp, "\t},\n");
+
+    fprintf(fp, "\t\"stars\": [\n");
+    fprintf(fp, "\t],\n");
     fclose(fp);
 
-    fp = fopen("stars.json", "w");
-    if (fp == NULL) {
-        fprintf(stderr, "Cannot create output file 'stars.json'!\n");
-        return 2;
-    }
-    fprintf(fp, "{\n");
-    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
-    fprintf(fp, "\t\"data\": [\n");
+    fprintf(fp, "\t\"planets\": [\n");
     fprintf(fp, "\t]\n");
-    fprintf(fp, "}\n");
-    fclose(fp);
 
-    fp = fopen("planets.json", "w");
-    if (fp == NULL) {
-        fprintf(stderr, "Cannot create output file 'planets.json'!\n");
-        return 2;
-    }
-    fprintf(fp, "{\n");
-    fprintf(fp, "\t\"semver\": \"%s\",\n", semver);
-    fprintf(fp, "\t\"data\": [\n");
-    fprintf(fp, "\t]\n");
     fprintf(fp, "}\n");
+
     fclose(fp);
 
     return 0;
