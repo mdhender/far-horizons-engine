@@ -194,8 +194,38 @@ main(int argc, char *argv[]) {
             struct nampla_data *nampla = nampla_base + j;
             fprintf(fp, "\t\t\t\t{\n");
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "id", j);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "aus_needed", nampla->AUs_needed);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "aus_to_install", nampla->AUs_to_install);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "auto_aus", nampla->auto_AUs);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "auto_ius", nampla->auto_IUs);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "hidden", nampla->hidden);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "hiding", nampla->hiding);
+            fprintf(fp, "\t\t\t\t\t\"%s\": [", "item_quantity");
+            for (int k = 0; k < MAX_ITEMS; k++) {
+                if (k != 0) {
+                    fprintf(fp, ",");
+                }
+                fprintf(fp, "%d", nampla->item_quantity[k]);
+            }
+            fprintf(fp, "]\n,");
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_needed", nampla->IUs_needed);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ius_to_install", nampla->IUs_to_install);
             fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\"\n", "name", nampla->name);
-            if (i + 1 < species->num_namplas) {
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "planet_index", nampla->planet_index);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "pn", nampla->pn);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "pop_units", nampla->pop_units);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "ma_base", nampla->ma_base);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "message", nampla->message);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "mi_base", nampla->mi_base);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "shipyards", nampla->shipyards);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "siege_eff", nampla->siege_eff);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "status", nampla->status);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "special", nampla->special);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "use_on_ambush", nampla->use_on_ambush);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "x", nampla->x);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "y", nampla->y);
+            fprintf(fp, "\t\t\t\t\t\"%s\": %d\n", "z", nampla->z);
+            if (j + 1 < species->num_namplas) {
                 fprintf(fp, "\t\t\t\t},\n");
             } else {
                 fprintf(fp, "\t\t\t\t}\n");
@@ -217,7 +247,7 @@ main(int argc, char *argv[]) {
             fprintf(fp, "\t\t\t\t{\n");
             fprintf(fp, "\t\t\t\t\t\"%s\": %d,\n", "id", j);
             fprintf(fp, "\t\t\t\t\t\"%s\": \"%s\"\n", "name", ship->name);
-            if (i + 1 < species->num_ships) {
+            if (j + 1 < species->num_ships) {
                 fprintf(fp, "\t\t\t\t},\n");
             } else {
                 fprintf(fp, "\t\t\t\t}\n");
