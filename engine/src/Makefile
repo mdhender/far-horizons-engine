@@ -1,4 +1,4 @@
-all: AsciiToBinary BinaryToAscii Locations dat2json sizes
+all: AsciiToBinary BinaryToAscii Locations dat2json mkjson sizes
 	echo "make all ran successfully"
 
 # uncrustify -c ~/fhc/.uncrustify.cfg Locations.c
@@ -36,6 +36,10 @@ Stats: $(Stats_o)
 dat2json_o = dat2json.o abend.o io.o get_gal.o get_star.o get_plan.o get_spec.o
 dat2json: $(dat2json_o)
 	cc -o ../bin/dat2json $(CFLAGS) $(dat2json_o)
+
+mkjson_o = mkjson.o abend.o io.o get_gal.o get_star.o get_plan.o get_spec.o
+mkjson: $(mkjson_o)
+	cc -o ../bin/mkjson $(CFLAGS) $(mkjson_o)
 
 sizes_o = sizes.o
 sizes: $(sizes_o)
@@ -113,6 +117,9 @@ get_transact.o: get_transact.c fh.h
 
 io.o: io.c fh.h
 	cc $(CFLAGS) -c io.c
+
+mkjson.o: mkjson.c fh.h
+	cc $(CFLAGS) -DTHIS_IS_MAIN -c mkjson.c
 
 parse.o: parse.c fh.h
 	cc $(CFLAGS) -c parse.c
