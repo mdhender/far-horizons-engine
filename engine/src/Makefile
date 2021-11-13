@@ -1,4 +1,4 @@
-all: AsciiToBinary BinaryToAscii Locations dat2json mkjson sizes
+all: AsciiToBinary BinaryToAscii Locations RenameShip dat2json mkjson sizes
 	echo "make all ran successfully"
 
 # uncrustify -c ~/fhc/.uncrustify.cfg Locations.c
@@ -28,6 +28,10 @@ Locations: $(Locations_o)
 NoOrders_o = NoOrders.o utils.o parse.o get_gal.o get_plan.o get_star.o abend.o
 NoOrders: $(NoOrders_o)
 	cc -o ../bin/NoOrders $(CFLAGS) $(NoOrders_o)
+
+RenameShip_o = RenameShip.o
+RenameShip: $(RenameShip_o)
+	cc -o ../bin/RenameShip $(CFLAGS) $(RenameShip_o)
 
 Stats_o = Stats.o get_gal.o get_star.o get_plan.o utils.o combat_utils.o abend.o
 Stats: $(Stats_o)
@@ -60,6 +64,9 @@ Locations.o: Locations.c fh.h
 
 NoOrders.o: NoOrders.c fh.h
 	cc $(CFLAGS) -c NoOrders.c
+
+RenameShip.o: RenameShip.c fh.h
+	cc $(CFLAGS) -c RenameShip.c
 
 Stats.o: Stats.c fh.h
 	cc $(CFLAGS) -c Stats.c
