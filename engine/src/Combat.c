@@ -186,19 +186,15 @@ char *argv[];
 	/* Open orders file for this species. */
 	sprintf (filename, "sp%02d.ord\0", species_number);
 	input_file = fopen (filename, "r");
-	if (input_file == NULL)
-	{
-	    if (do_all_species)
-	    {
-		if (prompt_gm)
-		    printf ("\nNo orders for species #%d, SP %s.\n",
-			species_number, sp->name);
-		continue;
-	    }
-	    else
-	    {
-		fprintf (stderr, "\n\tCannot open '%s' for reading!\n\n", filename);
-		exit (-1);
+	if (input_file == NULL) 	{
+	    if (do_all_species) 	    {
+			if (prompt_gm){
+				printf ("\nNo orders for species #%d, SP %s.\n", 			species_number, sp->name);
+			}
+			continue;
+	    }	    else	    {
+			fprintf (stderr, "\n\tCannot open '%s' for reading!\n\n", filename);
+			exit (-1);
 	    }
 	}
 
@@ -210,51 +206,42 @@ find_start:
 
 	/* Search for START COMBAT order. */
 	found = FALSE;
-	while (! found)
-	{
+	while (! found)	{
 	    command = get_command();
-	    if (command == MESSAGE)
-	    {
-		/* Skip MESSAGE text. It may contain a line that starts
-			with "start". */
-		while (TRUE)
-		{
-		    command = get_command();
-		    if (command < 0)
-		    {
-			fprintf (stderr,
-			    "WARNING: Unterminated MESSAGE command in file %s!\n",
-			    filename);
-			break;
-		    }
+	    if (command == MESSAGE)	    {
+			/* Skip MESSAGE text. It may contain a line that starts
+				with "start". */
+			while (TRUE)		{
+				command = get_command();
+				if (command < 0)		    {
+					fprintf (stderr,			    "WARNING: Unterminated MESSAGE command in file %s!\n",			    filename);
+					break;
+				}
 
-		    if (command == ZZZ) goto find_start;
-		}
+				if (command == ZZZ) {goto find_start;}
+			}
 	    }
 
-	    if (command < 0)
-		break;		/* End of file. */
-
-	    if (command != START)
-		continue;
+	    if (command < 0){
+			break;		/* End of file. */
+		}
+	    if (command != START){
+			continue;
+		}
 
 	    /* Get the first three letters of the keyword and convert to
 		upper case. */
 	    skip_whitespace();
-	    for (i = 0; i < 3; i++)
-	    {
-		keyword[i] = toupper (*input_line_pointer);
-		++input_line_pointer;
+	    for (i = 0; i < 3; i++)	    {
+			keyword[i] = toupper (*input_line_pointer);
+			++input_line_pointer;
 	    }
 	    keyword[3] = '\0';
 
-	    if (strike_phase)
-	    {
-		if (strcmp(keyword, "STR") == 0) found = TRUE;
-	    }
-	    else
-	    {
-		if (strcmp(keyword, "COM") == 0) found = TRUE;
+	    if (strike_phase)	    {
+			if (strcmp(keyword, "STR") == 0) {found = TRUE;}
+	    }	    else	    {
+			if (strcmp(keyword, "COM") == 0) {found = TRUE;}
 	    }
 	}
 

@@ -54,6 +54,8 @@ do_locations(void) {
 	extern struct nampla_data *nampla;
 	extern struct ship_data *ship_base;
 	extern struct ship_data *ship;
+    extern struct species_data spec_data[MAX_SPECIES];
+    extern struct nampla_data *namp_data;
 
     int i;
 
