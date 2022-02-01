@@ -1,4 +1,5 @@
 #include "fh.h"
+#include "utils.h"
 
 void exit(int status); // should use stdlib directly
 
@@ -589,13 +590,8 @@ save_location_data(void) {
  *      variable 'species_number' is the same number used in filename
  *      creation for the species. */
 
-int distorted(species_number)
-
-int species_number;
-
-{
+int distorted(int species_number) {
     int i, j, n, ls;
-
 
     /* We must use the LS tech level at the start of the turn because
      * the distorted species number must be the same throughout the
@@ -611,36 +607,24 @@ int species_number;
     return(n);
 }
 
-int undistorted(distorted_species_number)
-
-int distorted_species_number;
-
-{
+int undistorted(int distorted_species_number) {
     int i, species_number;
-
-
     for (i = 0; i < MAX_SPECIES; i++) {
         species_number = i + 1;
-
         if (distorted(species_number) == distorted_species_number) {
             return(species_number);
         }
     }
-
     return(0);   /* Not a legitimate species. */
 }
 
 
+void
+log_message(char *message_filename) {
+    extern FILE *log_file;
 
-log_message(message_filename)
-
-char *message_filename;
-
-{
     char message_line[256];
-
     FILE *message_file;
-
 
     /* Open message file. */
     message_file = fopen(message_filename, "r");
@@ -650,7 +634,7 @@ char *message_filename;
     }
 
     /* Copy message to log file. */
-    while (fgets(message_line, 256, message_file) != NULL) {
+    for (;fgets(message_line, 256, message_file) != NULL;) {
         fputs(message_line, log_file);
     }
 
@@ -663,21 +647,15 @@ char *message_filename;
  * return TRUE if the nampla is populated or FALSE if not. It will also
  * check if a message associated with this planet should be logged. */
 
-int check_population(nampla)
-
-struct nampla_data *nampla;
-
-{
+int
+check_population(struct nampla_data *nampla) {
     int is_now_populated, was_already_populated;
-
     long total_pop;
-
     char filename[32];
-
 
     if (nampla->status & POPULATED) {
         was_already_populated = TRUE;
-    }else{
+    } else{
         was_already_populated = FALSE;
     }
 
@@ -692,9 +670,8 @@ struct nampla_data *nampla;
     if (total_pop > 0) {
         nampla->status  |= POPULATED;
         is_now_populated = TRUE;
-    }else {
-        nampla->status &= ~(POPULATED | MINING_COLONY
-                            | RESORT_COLONY);
+    } else {
+        nampla->status &= ~(POPULATED | MINING_COLONY | RESORT_COLONY);
         is_now_populated = FALSE;
     }
 
@@ -794,15 +771,9 @@ int tech, old_tech_level, new_tech_level;
  * best match is less than the highest score.  A non-10000 score will never
  * be higher than the length of the correct string. */
 
-int agrep_score(correct_string, unknown_string)
-
-char *correct_string, *unknown_string;
-
-{
+int agrep_score(char *correct_string, char *unknown_string) {
     int score;
-
     char c1, c2, *p1, *p2;
-
 
     if (strcmp(correct_string, unknown_string) == 0) {
         return(10000);
@@ -812,34 +783,25 @@ char *correct_string, *unknown_string;
     p1    = correct_string;
     p2    = unknown_string;
 
-    while (1) {
+    for (;;) {
         if ((c1 = *p1++) == '\0') {
-            score -= strlen(p2);        /* Reduce score by excess characters,
-                                         * if any. */
+            score -= strlen(p2);        /* Reduce score by excess characters, if any. */
             break;
-        }
-
-        if ((c2 = *p2++) == '\0') {
-            score -= strlen(p1);        /* Reduce score by excess characters,
-                                         * if any. */
+        } else if ((c2 = *p2++) == '\0') {
+            score -= strlen(p1);        /* Reduce score by excess characters, if any. */
             break;
-        }
-
-        if (c1 == c2) {
+        } else if (c1 == c2) {
             ++score;
-        }else if (c1 == *p2 && c2 == *p1) {
-            /* Transposed. */
+        } else if (c1 == *p2 && c2 == *p1) {            /* Transposed. */
             score += 2;
-            ++p1;
-            ++p2;
-        }else if (c1 == *p2) {
-            /* Unneeded character. */
-            ++score;
-            ++p2;
-        }else if (c2 == *p1) {
-            /* Missing character. */
-            ++score;
-            ++p1;
+            p1++;
+            p2++;
+        } else if (c1 == *p2) {            /* Unneeded character. */
+            score++;
+            p2++;
+        } else if (c2 == *p1) {            /* Missing character. */
+            score++;
+            p1++;
         }
     }
 

@@ -1,20 +1,20 @@
 #include "fh.h"
+#include "parse.h"
 
-
-int   end_of_file = FALSE;
-int   abbr_type, abbr_index, sub_light, tonnage, just_opened_file;
-char  input_abbr[256], input_line[256], original_line[256], *input_line_pointer;
-char  original_name[32], upper_name[32];
-long  value;
+int end_of_file = FALSE;
+int abbr_type, abbr_index, sub_light, tonnage, just_opened_file;
+char input_abbr[256], input_line[256], original_line[256], *input_line_pointer;
+char original_name[32], upper_name[32];
+long value;
 FILE *input_file;
 
 char *fgetln(char *dst, int len, FILE *fp) {
     static char mbuf[1024];
-    int         i, k;
-    char *      p = fgets(mbuf, 1000, fp);
+    int i, k;
+    char *p = fgets(mbuf, 1000, fp);
 
     if (p == 0) {
-        return(p);
+        return (p);
     }
     for (i = 0; i < 1000; i++) {
         if (p[i] == '\r') {
@@ -29,7 +29,7 @@ char *fgetln(char *dst, int len, FILE *fp) {
 /* Skip white space and comments. */
 void
 skip_junk(void) {
-again:
+    again:
 
     /* Read next line. */
     input_line_pointer = fgets(input_line, 256, input_file);
@@ -66,34 +66,34 @@ again:
     /* Skip white space and comments. */
     while (TRUE) {
         switch (*input_line_pointer) {
-        case ';':                       /* Semi-colon. */
-        case '\n':                      /* Newline. */
-            goto again;
+            case ';':                       /* Semi-colon. */
+            case '\n':                      /* Newline. */
+                goto again;
 
-        case '\t':                      /* Tab. */
-        case ' ':                       /* Space. */
-        case ',':                       /* Comma. */
-            ++input_line_pointer;
-            continue;
+            case '\t':                      /* Tab. */
+            case ' ':                       /* Space. */
+            case ',':                       /* Comma. */
+                ++input_line_pointer;
+                continue;
 
-        default:
-            return;
+            default:
+                return;
         }
     }
 }
 
 void
 skip_whitespace(void) {
-    while (TRUE) {
+    for (;;) {
         switch (*input_line_pointer) {
-        case '\t':                      /* Tab. */
-        case ' ':                       /* Space. */
-        case ',':                       /* Comma. */
-            ++input_line_pointer;
-            break;
+            case '\t':                      /* Tab. */
+            case ' ':                       /* Space. */
+            case ',':                       /* Comma. */
+                ++input_line_pointer;
+                break;
 
-        default:
-            return;
+            default:
+                return;
         }
     }
 }
@@ -104,22 +104,20 @@ skip_whitespace(void) {
 
 
 /* Get a command and return its index. */
-int
-get_command(void) {
-    int  i, cmd_n;
+int get_command(void) {
+    int i, cmd_n;
     char c, cmd_s[4];
-
 
     skip_junk();
     if (end_of_file) {
-        return(-1);
+        return (-1);
     }
 
     c = *input_line_pointer;
     /* Get first three characters of command word. */
     for (i = 0; i < 3; i++) {
         if (!isalpha(c)) {
-            return(0);
+            return (0);
         }
         cmd_s[i] = toupper(c);
         ++input_line_pointer;
@@ -130,20 +128,20 @@ get_command(void) {
     /* Skip everything after third character of command word. */
     while (1) {
         switch (c) {
-        case '\t':
-        case '\n':
-        case ' ':
-        case ',':
-        case ';':
-            goto find_cmd;
+            case '\t':
+            case '\n':
+            case ' ':
+            case ',':
+            case ';':
+                goto find_cmd;
 
-        default:
-            ++input_line_pointer;
-            c = *input_line_pointer;
+            default:
+                ++input_line_pointer;
+                c = *input_line_pointer;
         }
     }
 
-find_cmd:
+    find_cmd:
 
     /* Find corresponding string in list. */
     cmd_n = UNKNOWN;
@@ -154,7 +152,7 @@ find_cmd:
         }
     }
 
-    return(cmd_n);
+    return (cmd_n);
 }
 
 /* Get a class abbreviation and return TECH_ID, ITEM_CLASS, SHIP_CLASS,
@@ -171,19 +169,18 @@ get_class_abbr(void) {
 
     char *digit_start;
 
-
     skip_whitespace();
 
     abbr_type = UNKNOWN;
 
     if (!isalnum(*input_line_pointer)) {
-        return(UNKNOWN);
+        return (UNKNOWN);
     }
     input_abbr[0] = toupper(*input_line_pointer);
     ++input_line_pointer;
 
     if (!isalnum(*input_line_pointer)) {
-        return(UNKNOWN);
+        return (UNKNOWN);
     }
     input_abbr[1] = toupper(*input_line_pointer);
     ++input_line_pointer;
@@ -191,19 +188,19 @@ get_class_abbr(void) {
     input_abbr[2] = '\0';
 
     /* Check for IDs that are followed by one or more digits or letters. */
-    i           = 2;
+    i = 2;
     digit_start = input_line_pointer;
     while (isalnum(*input_line_pointer)) {
         input_abbr[i++] = *input_line_pointer++;
-        input_abbr[i]   = '\0';
+        input_abbr[i] = '\0';
     }
 
     /* Check tech ID. */
     for (i = 0; i < 6; i++) {
         if (strcmp(input_abbr, tech_abbr[i]) == 0) {
             abbr_index = i;
-            abbr_type  = TECH_ID;
-            return(abbr_type);
+            abbr_type = TECH_ID;
+            return (abbr_type);
         }
     }
 
@@ -211,8 +208,8 @@ get_class_abbr(void) {
     for (i = 0; i < MAX_ITEMS; i++) {
         if (strcmp(input_abbr, item_abbr[i]) == 0) {
             abbr_index = i;
-            abbr_type  = ITEM_CLASS;
-            return(abbr_type);
+            abbr_type = ITEM_CLASS;
+            return (abbr_type);
         }
     }
 
@@ -220,8 +217,8 @@ get_class_abbr(void) {
     for (i = 0; i < NUM_SHIP_CLASSES; i++) {
         if (strncmp(input_abbr, ship_abbr[i], 2) == 0) {
             input_line_pointer = digit_start;
-            abbr_index         = i;
-            tonnage            = ship_tonnage[i];
+            abbr_index = i;
+            tonnage = ship_tonnage[i];
             if (i == TR) {
                 tonnage = 0;
                 while (isdigit(*input_line_pointer)) {
@@ -233,7 +230,7 @@ get_class_abbr(void) {
             if (toupper(*input_line_pointer) == 'S') {
                 sub_light = TRUE;
                 ++input_line_pointer;
-            }else {
+            } else {
                 sub_light = FALSE;
             }
 
@@ -241,24 +238,24 @@ get_class_abbr(void) {
                 break;                                  /* Garbage. */
             }
             abbr_type = SHIP_CLASS;
-            return(abbr_type);
+            return (abbr_type);
         }
     }
 
     /* Check for planet name. */
     if (strcmp(input_abbr, "PL") == 0) {
         abbr_type = PLANET_ID;
-        return(abbr_type);
+        return (abbr_type);
     }
 
     /* Check for species name. */
     if (strcmp(input_abbr, "SP") == 0) {
         abbr_type = SPECIES_ID;
-        return(abbr_type);
+        return (abbr_type);
     }
 
     abbr_type = UNKNOWN;
-    return(abbr_type);
+    return (abbr_type);
 }
 
 /* Get a name and copy original version to "original_name" and upper
@@ -266,55 +263,52 @@ get_class_abbr(void) {
 int
 get_name(void) {
     int name_length;
-
     char c;
-
 
     skip_whitespace();
 
     name_length = 0;
-    while (TRUE) {
+    for (;;) {
         c = *input_line_pointer;
         if (c == ';') {
             break;
         }
-        ++input_line_pointer;
+        input_line_pointer++;
         if (c == ',' || c == '\t' || c == '\n') {
             break;
         }
         if (name_length < 31) {
             original_name[name_length] = c;
-            upper_name[name_length]    = toupper(c);
-            ++name_length;
+            upper_name[name_length] = toupper(c);
+            name_length++;
         }
     }
 
     /* Remove any final spaces in name. */
-    while (name_length > 0) {
+    for (; name_length > 0;) {
         c = original_name[name_length - 1];
         if (c != ' ') {
             break;
         }
-        --name_length;
+        name_length--;
     }
 
     /* Terminate strings. */
     original_name[name_length] = '\0';
-    upper_name[name_length]    = '\0';
+    upper_name[name_length] = '\0';
 
-    return(name_length);
+    return (name_length);
 }
 
 /* Read a long decimal and place its value in 'value'. */
-int get_value() {
+int get_value(void) {
     int n;
-
 
     skip_whitespace();
 
     n = sscanf(input_line_pointer, "%ld", &value);
     if (n != 1) {
-        return(0);              /* Not a numeric value. */
+        return (0);              /* Not a numeric value. */
     }
     /* Skip numeric string. */
     ++input_line_pointer;       /* Skip first sign or digit. */
@@ -322,7 +316,7 @@ int get_value() {
         ++input_line_pointer;
     }
 
-    return(1);
+    return (1);
 }
 
 /* The following routine will check that the next argument in the current
@@ -349,7 +343,7 @@ fix_separator(void) {
 
     /* Look for a ship, planet, or species abbreviation after the first one.
      *  If it is preceeded by a space, convert the space to a comma. */
-    temp_ptr    = input_line_pointer;
+    temp_ptr = input_line_pointer;
     first_class = get_class_abbr();     /* Skip first one but remember what it was. */
     while (1) {
         skip_whitespace();
@@ -372,7 +366,7 @@ fix_separator(void) {
             /* Convert space preceeding abbreviation to a comma. */
             if (*temp2_ptr == ' ') {
                 *temp2_ptr = ',';
-                fix_made   = TRUE;
+                fix_made = TRUE;
             }
         }
     }
