@@ -5,9 +5,9 @@
 
 void
 add_location(char x, char y, char z) {
-	extern int num_locs;
-	extern struct sp_loc_data   loc[MAX_LOCATIONS];
-	extern int species_number;
+    extern int num_locs;
+    extern struct sp_loc_data loc[MAX_LOCATIONS];
+    extern int species_number;
 
     int i;
 
@@ -45,17 +45,17 @@ add_location(char x, char y, char z) {
 
 void
 do_locations(void) {
-	extern int num_locs;
-	extern int species_index;
-	extern int species_number;
-	extern struct galaxy_data   galaxy;
-	extern struct species_data *species;
-	extern struct nampla_data *nampla_base;
-	extern struct nampla_data *nampla;
-	extern struct ship_data *ship_base;
-	extern struct ship_data *ship;
+    extern int num_locs;
+    extern int species_index;
+    extern int species_number;
+    extern struct galaxy_data galaxy;
+    extern struct species_data *species;
+    extern struct nampla_data *nampla_base;
+    extern struct nampla_data *nampla;
+    extern struct ship_data *ship_base;
+    extern struct ship_data *ship;
     extern struct species_data spec_data[MAX_SPECIES];
-    extern struct nampla_data *namp_data;
+    extern struct nampla_data *namp_data[MAX_SPECIES];
 
     int i;
 
@@ -66,9 +66,9 @@ do_locations(void) {
             continue;
         }
 
-        species     = &spec_data[species_number - 1];
+        species = &spec_data[species_number - 1];
         nampla_base = namp_data[species_number - 1];
-        ship_base   = ship_data[species_number - 1];
+        ship_base = ship_data[species_number - 1];
 
         nampla = nampla_base - 1;
         for (i = 0; i < species->num_namplas; i++) {
