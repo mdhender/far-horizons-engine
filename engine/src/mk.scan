@@ -1,6 +1,6 @@
 
 SCAN1 = scan.o utils.o
-SCAN2 = get_gal.o get_star.o get_plan.o
+SCAN2 = get_gal.o get_star.o get_plan.o abend.o
 
 SCAN_OBJS = ScanSpXYZ.o $(SCAN1) $(SCAN2)
 
@@ -10,6 +10,9 @@ ScanSpXYZ: $(SCAN_OBJS)
 
 ScanSpXYZ.o: ScanSpXYZ.c fh.h
 	cc -no-pie -c ScanSpXYZ.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 get_spec.o: get_spec.c fh.h
 	cc -no-pie -c get_spec.c

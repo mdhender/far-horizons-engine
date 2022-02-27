@@ -1,5 +1,5 @@
 
-REP_OBJS = Report.o get_gal.o get_star.o get_plan.o utils.o
+REP_OBJS = Report.o get_gal.o get_star.o get_plan.o utils.o abend.o
 CC = cc -g -no-pie
 
 Report: $(REP_OBJS)
@@ -7,6 +7,9 @@ Report: $(REP_OBJS)
 
 Report.o: Report.c fh.h
 	$(CC) -c Report.c
+
+abend.o: abend.c fh.h
+	$(CC) -c abend.c
 
 utils.o: utils.c fh.h
 	$(CC) -c utils.c

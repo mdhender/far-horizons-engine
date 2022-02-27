@@ -1,5 +1,5 @@
 
-TURN_OBJS = TurnNumber.o get_gal.o
+TURN_OBJS = TurnNumber.o get_gal.o abend.o
 
 
 TurnNumber: $(TURN_OBJS)
@@ -7,6 +7,9 @@ TurnNumber: $(TURN_OBJS)
 
 TurnNumber.o: TurnNumber.c fh.h
 	cc -no-pie -c TurnNumber.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 get_gal.o: get_gal.c fh.h
 	cc -no-pie -c get_gal.c

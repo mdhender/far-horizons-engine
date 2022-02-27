@@ -1,5 +1,5 @@
 
-LIST_OBJS = ListGalaxy.o utils.o get_gal.o get_star.o get_plan.o
+LIST_OBJS = ListGalaxy.o utils.o get_gal.o get_star.o get_plan.o abend.o
 
 
 ListGalaxy: $(LIST_OBJS)
@@ -7,6 +7,9 @@ ListGalaxy: $(LIST_OBJS)
 
 ListGalaxy.o: ListGalaxy.c fh.h
 	cc -no-pie -c ListGalaxy.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

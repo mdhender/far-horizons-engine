@@ -1,5 +1,5 @@
 
-SHOW_OBJS = ShowGalaxy.o get_gal.o get_star.o get_plan.o
+SHOW_OBJS = ShowGalaxy.o get_gal.o get_star.o get_plan.o abend.o
 
 
 ShowGalaxy: $(SHOW_OBJS)
@@ -7,6 +7,9 @@ ShowGalaxy: $(SHOW_OBJS)
 
 ShowGalaxy.o: ShowGalaxy.c fh.h
 	cc -no-pie -c ShowGalaxy.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 get_gal.o: get_gal.c fh.h
 	cc -no-pie -c get_gal.c

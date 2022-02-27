@@ -1,5 +1,5 @@
 
-BINARY1 = BinaryToAscii.o get_gal.o get_star.o get_plan.o utils.o
+BINARY1 = BinaryToAscii.o get_gal.o get_star.o get_plan.o utils.o abend.o
 
 BINARY_OBJS = $(BINARY1)
 
@@ -8,6 +8,9 @@ BinaryToAscii: $(BINARY_OBJS)
 
 BinaryToAscii.o: BinaryToAscii.c fh.h
 	cc -no-pie -c BinaryToAscii.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

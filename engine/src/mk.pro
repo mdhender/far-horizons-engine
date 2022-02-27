@@ -2,7 +2,7 @@
 PRO1 = utils.o parse.o money.o do_prod.o get_ship.o do_est.o do_enemy.o do_dev.o
 PRO2 = get_gal.o get_plan.o do_recy.o sav_plan.o do_upg.o do_shipyard.o do_neutral.o
 PRO3 = gam_abo.o do_build.o do_res.o get_spnam.o do_hide.o do_ally.o get_transfer.o
-PRO4 = get_loc.o do_amb.o get_transact.o sav_transact.o do_int.o get_star.o
+PRO4 = get_loc.o do_amb.o get_transact.o sav_transact.o do_int.o get_star.o abend.o
 
 PRO_OBJS = Production.o $(PRO1) $(PRO2) $(PRO3) $(PRO4)
 
@@ -11,6 +11,9 @@ Production: $(PRO_OBJS)
 
 Production.o: Production.c fh.h
 	cc -no-pie -c Production.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

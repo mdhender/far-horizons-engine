@@ -1,5 +1,5 @@
 
-NEW_OBJS = NewGalaxy.o get_star.o utils.o gen_plan.o
+NEW_OBJS = NewGalaxy.o get_star.o utils.o gen_plan.o abend.o
 
 
 NewGalaxy: $(NEW_OBJS)
@@ -7,6 +7,9 @@ NewGalaxy: $(NEW_OBJS)
 
 NewGalaxy.o: NewGalaxy.c fh.h
 	cc -no-pie -c NewGalaxy.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

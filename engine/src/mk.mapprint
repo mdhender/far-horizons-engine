@@ -1,8 +1,12 @@
 
-MAP_OBJS = PrintMap.o
+MAP_OBJS = PrintMap.o abend.o
 
 MapGalaxy: $(MAP_OBJS)
 	cc -no-pie -o ../bin/PrintMap $(MAP_OBJS) -lm
 
 PrintMap.o: PrintMap.c
 	cc -no-pie -c PrintMap.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
+

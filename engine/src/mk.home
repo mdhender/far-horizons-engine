@@ -1,5 +1,5 @@
 
-HOM_OBJS = HomeSystem.o utils.o get_gal.o get_star.o sav_star.o get_plan.o sav_plan.o gam_abo.o
+HOM_OBJS = HomeSystem.o utils.o get_gal.o get_star.o sav_star.o get_plan.o sav_plan.o gam_abo.o abend.o
 
 
 HomeSystem: $(HOM_OBJS)
@@ -7,6 +7,9 @@ HomeSystem: $(HOM_OBJS)
 
 HomeSystem.o: HomeSystem.c fh.h
 	cc -no-pie -c HomeSystem.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

@@ -1,12 +1,14 @@
 
-MAP_OBJS = MapGalaxy.o get_gal.o get_star.o
-
+MAP_OBJS = MapGalaxy.o get_gal.o get_star.o abend.o
 
 MapGalaxy: $(MAP_OBJS)
 	cc $(MAP_OBJS) -no-pie -o ../bin/MapGalaxy
 
 MapGalaxy.o: MapGalaxy.c fh.h
 	cc -no-pie -c MapGalaxy.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 get_gal.o: get_gal.c fh.h
 	cc -no-pie -c get_gal.c

@@ -1,5 +1,5 @@
 
-SETUP_OBJS = Setup.o parse.o get_gal.o gam_abo.o
+SETUP_OBJS = Setup.o parse.o get_gal.o gam_abo.o abend.o
 
 
 Setup: $(SETUP_OBJS)
@@ -7,6 +7,9 @@ Setup: $(SETUP_OBJS)
 
 Setup.o: Setup.c fh.h
 	cc -no-pie -c Setup.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 parse.o: parse.c fh.h
 	cc -no-pie -c parse.c

@@ -1,5 +1,5 @@
 
-MHO_OBJS = MakeHomes.o get_star.o utils.o
+MHO_OBJS = MakeHomes.o get_star.o utils.o abend.o
 
 
 MakeHomes: $(MHO_OBJS)
@@ -7,6 +7,9 @@ MakeHomes: $(MHO_OBJS)
 
 MakeHomes.o: MakeHomes.c fh.h
 	cc -no-pie -c MakeHomes.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c

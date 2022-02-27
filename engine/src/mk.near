@@ -1,5 +1,5 @@
 
-NEAR_OBJS = Near.o utils.o get_gal.o get_star.o get_plan.o scan.o
+NEAR_OBJS = Near.o utils.o get_gal.o get_star.o get_plan.o scan.o abend.o
 
 
 Near: $(NEAR_OBJS)
@@ -7,6 +7,9 @@ Near: $(NEAR_OBJS)
 
 Near.o: Near.c fh.h
 	cc -no-pie -c Near.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	cc -no-pie -c utils.c
