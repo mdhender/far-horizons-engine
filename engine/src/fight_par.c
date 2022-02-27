@@ -21,6 +21,8 @@ extern struct species_data *c_species[MAX_SPECIES];
 extern struct nampla_data *c_nampla[MAX_SPECIES];
 extern struct ship_data *c_ship[MAX_SPECIES];
 
+int disbandedShip(int species_index, struct ship_data *sh);
+
 int fighting_params(char option, char location, struct battle_data *bat, struct action_data *act) {
     char x, y, z, pn;
     int i, j, found, type, num_sp, unit_index, species_index,
@@ -69,7 +71,7 @@ int fighting_params(char option, char location, struct battle_data *bat, struct 
             if (sh->class == TR && sh->pn != location && option != GERM_WARFARE) {
                 continue;
             }
-            if (disbanded_ship(species_index, sh)) { continue; }
+            if (disbandedShip(species_index, sh)) { continue; }
             if (option == SIEGE || option == PLANET_BOMBARDMENT) {
                 if (sh->special == NON_COMBATANT) { continue; }
             }
@@ -377,7 +379,7 @@ int fighting_params(char option, char location, struct battle_data *bat, struct 
 }
 
 
-int disbanded_ship(species_index int, struct ship_data *sh) {
+int disbandedShip(int species_index, struct ship_data *sh) {
     int nampla_index;
 
     struct nampla_data *nam;
