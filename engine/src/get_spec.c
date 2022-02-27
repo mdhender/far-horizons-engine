@@ -16,7 +16,7 @@
  * necessary, by the main program. */
 
 long extra_namplas = NUM_EXTRA_NAMPLAS;
-long extra_ships   = NUM_EXTRA_SHIPS;
+long extra_ships = NUM_EXTRA_SHIPS;
 
 void
 get_species_data(void) {
@@ -34,14 +34,14 @@ get_species_data(void) {
         data_in_memory[species_index] = FALSE;
         data_modified[species_index] = FALSE;
         num_new_namplas[species_index] = 0;
-        num_new_ships[species_index]   = 0;
+        num_new_ships[species_index] = 0;
     }
 
     for (int species_index = 0; species_index < galaxy.num_species; species_index++) {
         char filename[16];
         struct stat sb;
         int fd;
-        ssize_t     bytesRead;
+        ssize_t bytesRead;
         struct species_data *sp = &spec_data[species_index];
 
         sprintf(filename, "sp%02d.dat", species_index + 1);
@@ -61,7 +61,8 @@ get_species_data(void) {
             abend("\n\tCannot read species record in file '%s'!\n\n", filename);
         }
 
-        namp_data[species_index] = (struct nampla_data *)calloc(sp->num_namplas + extra_namplas, sizeof(struct nampla_data));
+        namp_data[species_index] = (struct nampla_data *) calloc(sp->num_namplas + extra_namplas,
+                                                                 sizeof(struct nampla_data));
         if (namp_data[species_index] == 0) {
             abend("\nCannot allocate enough memory for nampla data from file '%s'!\n\n", filename);
         }
@@ -70,7 +71,7 @@ get_species_data(void) {
             abend("\n\tCannot read nampla data from file '%s'!\n\n", filename);
         }
 
-        ship_data[species_index] = (struct ship_data *)calloc(sp->num_ships + extra_ships, sizeof(struct ship_data));
+        ship_data[species_index] = (struct ship_data *) calloc(sp->num_ships + extra_ships, sizeof(struct ship_data));
         if (ship_data[species_index] == 0) {
             abend("\nCannot allocate enough memory for ship data from file '%s'!\n\n", filename);
         }
@@ -84,6 +85,6 @@ get_species_data(void) {
 
         close(fd);
 
-        data_in_memory[species_index]  = TRUE;
+        data_in_memory[species_index] = TRUE;
     }
 }
