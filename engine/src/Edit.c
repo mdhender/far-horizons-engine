@@ -22,14 +22,9 @@ extern int	num_stars, num_planets, truncate_name, ignore_field_distorters;
 extern struct star_data		*star_base;
 extern struct planet_data	*planet_base;
 
+int getLocation(int need_planet);
 
-
-main (argc, argv)
-
-int argc;
-char *argv[];
-
-{
+int main(int argc, char *argv[]) {
     int		i, option, stars_modified, planets_modified, species_modified;
 
     char	answer[16];
@@ -124,7 +119,7 @@ create_star ()
     char	*cp;
 
 
-    if (get_location (FALSE)) goto no_change;
+    if (getLocation(FALSE)) goto no_change;
 
     star = star_base + num_stars;
 
@@ -178,7 +173,7 @@ edit_star ()
     int		i;
 
 
-    if (! get_location (FALSE)) return;
+    if (! getLocation(FALSE)) return;
 
     printf ("Current message = %ld: ", star->message);
     i = get_value ();
@@ -217,7 +212,7 @@ edit_planet ()
     char	answer[64];
 
 
-    if (! get_location (TRUE)) return;
+    if (! getLocation(TRUE)) return;
 
     printf ("\n               Temp  Press Mining\n");
     printf ("  #  Dia  Grav Class Class  Diff  Atmosphere\n");
@@ -842,7 +837,7 @@ create_nampla ()
 
 
     /* Get planet cordinates. */
-    if (! get_location (TRUE)) return;
+    if (! getLocation (TRUE)) return;
 
     /* Get planet name and make an upper case copy. */
     printf ("\nEnter name: ");
@@ -1141,11 +1136,7 @@ create_ship ()
 
 
 
-int get_location (need_planet)
-
-int need_planet;
-
-{
+int getLocation(int need_planet) {
     int		i, found;
 
 
