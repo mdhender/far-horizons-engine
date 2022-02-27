@@ -1,7 +1,7 @@
 
 COM1 = combat_utils.o utils.o parse.o for_jum.o cons_op.o do_germ.o get_ship.o
 COM2 = fight_par.o do_bat.o do_round.o do_bomb.o do_siege.o get_spnam.o with_check.o
-COM3 = regen_sh.o get_gal.o get_plan.o sav_plan.o get_transact.o sav_transact.o
+COM3 = regen_sh.o get_gal.o get_plan.o sav_plan.o get_transact.o sav_transact.o abend.o
 
 COMBAT_OBJS = Combat.o $(COM1) $(COM2) $(COM3)
 CC = cc -g -no-pie
@@ -16,6 +16,9 @@ Combat.o: Combat.c fh.h combat.h
 
 combat_utils.o: combat_utils.c
 	$(CC) -c combat_utils.c
+
+abend.o: abend.c fh.h
+	cc -no-pie -c abend.c
 
 utils.o: utils.c fh.h
 	$(CC) -c utils.c
