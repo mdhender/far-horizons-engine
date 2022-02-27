@@ -594,7 +594,7 @@ do_battle(struct battle_data *bat) {
         }
 
         /* Open a temporary species log file for appending. */
-        sprintf(filename, "sp%02d.temp.log\0", species_number);
+        sprintf(filename, "sp%02d.temp.log", species_number);
         species_log = fopen(filename, "a");
         if (species_log == NULL) {
             fprintf(stderr, "\n\tCannot open '%s' for appending!\n\n", filename);

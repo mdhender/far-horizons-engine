@@ -60,7 +60,7 @@ get_species_data(void) {
         sp = &spec_data[species_index];
 
         /* Open the species data file. */
-        sprintf(filename, "sp%02d.dat\0", species_index + 1);
+        sprintf(filename, "sp%02d.dat", species_index + 1);
         species_fd = open(filename, 0);
         if (species_fd < 0) {
             sp->pn = 0;                 /* Extinct! */
@@ -137,7 +137,7 @@ save_species_data(void) {
         sp = &spec_data[species_index];
 
         /* Open the species data file. */
-        sprintf(filename, "sp%02d.dat\0", species_index + 1);
+        sprintf(filename, "sp%02d.dat", species_index + 1);
         species_fd = creat(filename, 0600);
         if (species_fd < 0) {
             fprintf(stderr, "\n  Cannot create new version of file '%s'!\n",
@@ -249,7 +249,7 @@ commas(long value) {
         abs_value = value;
         negative  = FALSE;
     }
-    sprintf(temp, "%ld\0", abs_value);
+    sprintf(temp, "%ld", abs_value);
     length = strlen(temp);
     i      = length - 1;
     j      = 31;
@@ -305,19 +305,19 @@ ship_name(struct ship_data *ship) {
 
     if (ship_is_distorted) {
         if (ship->class == TR) {
-            sprintf(full_ship_id, "%s%d ???\0", ship_abbr[ship->class],
+            sprintf(full_ship_id, "%s%d ???", ship_abbr[ship->class],
                     ship->tonnage);
         }else if (ship->class == BA) {
-            sprintf(full_ship_id, "BAS ???\0");
+            sprintf(full_ship_id, "BAS ???");
         }else{
-            sprintf(full_ship_id, "%s ???\0", ship_abbr[ship->class]);
+            sprintf(full_ship_id, "%s ???", ship_abbr[ship->class]);
         }
     }else if (ship->class == TR) {
-        sprintf(full_ship_id, "%s%d%s %s\0",
+        sprintf(full_ship_id, "%s%d%s %s",
                 ship_abbr[ship->class], ship->tonnage, ship_type[ship->type],
                 ship->name);
     }else {
-        sprintf(full_ship_id, "%s%s %s\0",
+        sprintf(full_ship_id, "%s%s %s",
                 ship_abbr[ship->class], ship_type[ship->type], ship->name);
     }
 
@@ -335,7 +335,7 @@ ship_name(struct ship_data *ship) {
     if (!ship_is_distorted) {
         if (ship->status != UNDER_CONSTRUCTION) {
             /* Do age. */
-            sprintf(temp, "A%d,\0", effective_age);
+            sprintf(temp, "A%d,", effective_age);
             strcat(full_ship_id, temp);
         }
     }
@@ -343,38 +343,38 @@ ship_name(struct ship_data *ship) {
     status = ship->status;
     switch (status) {
     case UNDER_CONSTRUCTION:
-        sprintf(temp, "C\0");
+        sprintf(temp, "C");
         break;
 
     case IN_ORBIT:
-        sprintf(temp, "O%d\0", ship->pn);
+        sprintf(temp, "O%d", ship->pn);
         break;
 
     case ON_SURFACE:
-        sprintf(temp, "L%d\0", ship->pn);
+        sprintf(temp, "L%d", ship->pn);
         break;
 
     case IN_DEEP_SPACE:
-        sprintf(temp, "D\0");
+        sprintf(temp, "D");
         break;
 
     case FORCED_JUMP:
-        sprintf(temp, "FJ\0");
+        sprintf(temp, "FJ");
         break;
 
     case JUMPED_IN_COMBAT:
-        sprintf(temp, "WD\0");
+        sprintf(temp, "WD");
         break;
 
     default:
-        sprintf(temp, "***???***\0");
+        sprintf(temp, "***???***");
         fprintf(stderr, "\n\tWARNING!!!  Internal error in subroutine 'ship_name'\n\n");
     }
 
     strcat(full_ship_id, temp);
 
     if (ship->type == STARBASE) {
-        sprintf(temp, ",%ld tons\0", 10000L * (long)ship->tonnage);
+        sprintf(temp, ",%ld tons", 10000L * (long)ship->tonnage);
         strcat(full_ship_id, temp);
     }
 
@@ -506,7 +506,7 @@ log_int(int value) {
     if (logging_disabled) {
         return;
     }
-    sprintf(string, "%d\0", value);
+    sprintf(string, "%d", value);
     log_string(string);
 }
 
@@ -517,7 +517,7 @@ log_long(long value) {
     if (logging_disabled) {
         return;
     }
-    sprintf(string, "%ld\0", value);
+    sprintf(string, "%ld", value);
     log_string(string);
 }
 
@@ -679,7 +679,7 @@ check_population(struct nampla_data *nampla) {
         if (nampla->message) {
             /* There is a message that must be logged whenever this planet
              *      becomes populated for the first time. */
-            sprintf(filename, "message%ld.txt\0", nampla->message);
+            sprintf(filename, "message%ld.txt", nampla->message);
             log_message(filename);
         }
     }

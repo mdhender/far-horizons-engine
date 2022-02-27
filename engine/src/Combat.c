@@ -190,7 +190,7 @@ comparison purposes later. Also do some initializations. */
         ship_base = ship_data[species_number - 1];
 
 /* Open orders file for this species. */
-        sprintf(filename, "sp%02d.ord\0", species_number);
+        sprintf(filename, "sp%02d.ord", species_number);
         input_file = fopen(filename, "r");
         if (input_file == NULL) {
             if (do_all_species) {
@@ -274,7 +274,7 @@ comparison purposes later. Also do some initializations. */
         }
 
 /* Open temporary log file for appending. */
-        sprintf(filename, "sp%02d.temp.log\0", species_number);
+        sprintf(filename, "sp%02d.temp.log", species_number);
         log_file = fopen(filename, "a");
         if (log_file == NULL) {
             fprintf(stderr, "\n\tCannot open '%s' for appending!\n\n", filename);
@@ -970,7 +970,7 @@ during the battle. */
 
             if (!log_open) {
 /* Open temporary species log file for appending. */
-                sprintf(filename, "sp%02d.temp.log\0", i + 1);
+                sprintf(filename, "sp%02d.temp.log", i + 1);
                 log_file = fopen(filename, "a");
                 if (log_file == NULL) {
                     fprintf(stderr, "\n\tCannot open '%s' for appending!\n\n", filename);
@@ -1022,7 +1022,7 @@ logs. In either case, delete temporary logs. */
         }
 
         sprintf(filename,
-                "sp%02d.temp.log\0", i + 1);
+                "sp%02d.temp.log", i + 1);
 
         if (save) {
             temp_species_log = fopen(filename, "r");

@@ -64,7 +64,7 @@ char *argv[];
 
     /* Open file HSn, where n is the number of planets in the system. We will
 	overwrite the existing planet data with the data in the file. */
-    sprintf (filename, "HS%d\0", star->num_planets);
+    sprintf (filename, "HS%d", star->num_planets);
     home_system_fd = open (filename, 0);
     if (home_system_fd < 0)
     {

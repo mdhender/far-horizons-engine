@@ -39,7 +39,7 @@ char *argv[];
     earth_like = TRUE;
     for (num_planets = 3; num_planets < 10; num_planets++)
     {
-	sprintf (filename, "HS%d\0", num_planets);
+	sprintf (filename, "HS%d", num_planets);
 	printf ("Now doing file '%s'...\n", filename);
 
 	potential_home_system = FALSE;

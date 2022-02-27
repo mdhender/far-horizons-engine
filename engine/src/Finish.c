@@ -135,7 +135,7 @@ char *argv[];
 	ship_base = ship_data[species_number - 1];
 
 	/* Check if player submitted orders for this turn. */
-	sprintf (filename, "sp%02d.ord\0", species_number);
+	sprintf (filename, "sp%02d.ord", species_number);
 	i = open (filename, 0);
 	if (i < 0)
 	    orders_received = FALSE;
@@ -156,7 +156,7 @@ char *argv[];
 	}
 
 	/* Open log file for appending. */
-	sprintf (filename, "sp%02d.log\0", species_number);
+	sprintf (filename, "sp%02d.log", species_number);
 	log_file = fopen (filename, "a");
 	if (log_file == NULL)
 	{
@@ -972,7 +972,7 @@ check_for_message:
 		log_string (transaction[i].name1);
 		log_string (":\n\n");
 
-		sprintf (filename, "m%d.msg\0", (int) transaction[i].value);
+		sprintf (filename, "m%d.msg", (int) transaction[i].value);
 
 		log_message (filename);
 
@@ -1054,7 +1054,7 @@ check_for_message:
 		&&  transaction[i].donor == species_number)
 	    {
 		/* Open log file for appending. */
-		sprintf (filename, "sp%02d.log\0", species_number);
+		sprintf (filename, "sp%02d.log", species_number);
 		log_file = fopen (filename, "a");
 		if (log_file == NULL)
 		{

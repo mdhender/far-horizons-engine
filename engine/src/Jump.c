@@ -19,7 +19,7 @@
 
 // exports used by other functions
 int first_pass;
-struct galaxy_data  galaxy;
+struct galaxy_data galaxy;
 struct nampla_data *nampla;
 struct nampla_data *nampla_base;
 int pn;
@@ -39,14 +39,14 @@ static int verbose_mode;
 
 int
 main(int argc, char *argv[]) {
-    extern int   end_of_file;
-    extern int   ignore_field_distorters;
+    extern int end_of_file;
+    extern int ignore_field_distorters;
     extern char *input_line_pointer;
-    extern int   just_opened_file;
+    extern int just_opened_file;
     extern FILE *input_file;
-    extern long  last_random;
+    extern long last_random;
     extern FILE *log_file;
-    extern int   log_stdout;
+    extern int log_stdout;
     extern struct nampla_data *nampla_base;
     extern struct planet_data *planet_base;
     extern int planet_data_modified;
@@ -54,21 +54,21 @@ main(int argc, char *argv[]) {
     extern struct ship_data *ship_base;
     extern int ship_index;
     extern struct species_data *species;
-    extern struct star_data *   star_base;
+    extern struct star_data *star_base;
     extern int star_data_modified;
     extern int test_mode;
     extern int truncate_name;
     extern int verbose_mode;
 
     int i, n, found, num_species, sp_num[MAX_SPECIES], sp_index,
-        command, log_file_open, do_all_species;
+            command, log_file_open, do_all_species;
 
     char filename[32], species_jumped[MAX_SPECIES], keyword[4];
 
 
     /* Seed random number generator. */
     last_random = time(NULL);
-    n           = rnd(100) + rnd(200) + rnd(300);
+    n = rnd(100) + rnd(200) + rnd(300);
     for (i = 0; i < n; i++) {
         rnd(10);
     }
@@ -84,18 +84,18 @@ main(int argc, char *argv[]) {
      *  abort if necessary before saving results to disk. All other
      *  arguments must be species numbers. If no species numbers are
      *  specified, then do all species. */
-    num_species  = 0;
-    first_pass   = FALSE;
-    test_mode    = FALSE;
+    num_species = 0;
+    first_pass = FALSE;
+    test_mode = FALSE;
     verbose_mode = FALSE;
     for (i = 1; i < argc; i++) {
         if (strcmp(argv[i], "-p") == 0) {
             first_pass = TRUE;
-        }else if (strcmp(argv[i], "-t") == 0) {
+        } else if (strcmp(argv[i], "-t") == 0) {
             test_mode = TRUE;
-        }else if (strcmp(argv[i], "-v") == 0) {
+        } else if (strcmp(argv[i], "-v") == 0) {
             verbose_mode = TRUE;
-        }else{
+        } else {
             n = atoi(argv[i]);
             if (n < 1 || n > galaxy.num_species) {
                 fprintf(stderr,
@@ -112,14 +112,14 @@ main(int argc, char *argv[]) {
             sp_num[i] = i + 1;
         }
         do_all_species = TRUE;
-    }else {
+    } else {
         do_all_species = FALSE;
     }
 
     /* For these commands, do not display age or landed/orbital status
      *  of ships. */
     truncate_name = TRUE;
-    log_stdout    = FALSE; /* We will control value of log_file from here. */
+    log_stdout = FALSE; /* We will control value of log_file from here. */
 
     /* Initialize array that will indicate which species provided jump
      *  orders. If ships of a species withdrew or were forced from combat
@@ -134,7 +134,7 @@ main(int argc, char *argv[]) {
      *  check for errors and abort if any are found. Results will be written
      *  to disk only on the second pass. */
 
-start_pass:
+    start_pass:
 
     if (first_pass) {
         printf("\nStarting first pass...\n\n");
@@ -155,19 +155,19 @@ start_pass:
                     printf("\n    Skipping species #%d.\n", species_number);
                 }
                 continue;
-            }else {
+            } else {
                 fprintf(stderr, "\n    Cannot get data for species #%d!\n",
                         species_number);
                 exit(-1);
             }
         }
 
-        species     = &spec_data[species_number - 1];
+        species = &spec_data[species_number - 1];
         nampla_base = namp_data[species_number - 1];
-        ship_base   = ship_data[species_number - 1];
+        ship_base = ship_data[species_number - 1];
 
         /* Open orders file for this species. */
-        sprintf(filename, "sp%02d.ord\0", species_number);
+        sprintf(filename, "sp%02d.ord", species_number);
         input_file = fopen(filename, "r");
         if (input_file == NULL) {
             if (do_all_species) {
@@ -175,7 +175,7 @@ start_pass:
                     printf("\n    No orders for species #%d.\n", species_number);
                 }
                 continue;
-            }else {
+            } else {
                 fprintf(stderr, "\n\tCannot open '%s' for reading!\n\n", filename);
                 exit(-1);
             }
@@ -184,9 +184,9 @@ start_pass:
         /* Open log file. Use stdout for first pass. */
         if (first_pass) {
             log_file = stdout;
-        }else {
+        } else {
             /* Open log file for appending. */
-            sprintf(filename, "sp%02d.log\0", species_number);
+            sprintf(filename, "sp%02d.log", species_number);
             log_file = fopen(filename, "a");
             if (log_file == NULL) {
                 fprintf(stderr, "\n\tCannot open '%s' for appending!\n\n", filename);
@@ -198,7 +198,7 @@ start_pass:
 
         just_opened_file = TRUE;        /* Tell parse.c to skip mail header,
                                          *      if any. */
-find_start:
+        find_start:
 
         /* Search for START JUMPS order. */
         found = FALSE;
@@ -255,9 +255,9 @@ find_start:
         log_string("\nJump orders:\n");
         do_jump_orders();
         species_jumped[species_number - 1] = TRUE;
-        data_modified[species_number - 1]  = TRUE;
+        data_modified[species_number - 1] = TRUE;
 
-done_orders:
+        done_orders:
 
         fclose(input_file);
 
@@ -291,11 +291,11 @@ done_orders:
         goto start_pass;
     }
 
-no_jump_orders:
+    no_jump_orders:
 
     /* Take care of any ships that withdrew from combat but were not
      *  handled above because no jump orders were received for species. */
-    log_stdout    = TRUE;
+    log_stdout = TRUE;
     log_file_open = FALSE;
     for (species_number = 1; species_number <= galaxy.num_species; species_number++) {
         if (species_jumped[species_number - 1]) {
@@ -306,15 +306,15 @@ no_jump_orders:
             continue;
         }
 
-        species     = &spec_data[species_number - 1];
+        species = &spec_data[species_number - 1];
         nampla_base = namp_data[species_number - 1];
-        ship_base   = ship_data[species_number - 1];
+        ship_base = ship_data[species_number - 1];
 
         ship = ship_base;
         for (ship_index = 0; ship_index < species->num_ships; ship_index++) {
             if (ship->status == FORCED_JUMP || ship->status == JUMPED_IN_COMBAT) {
                 if (!log_file_open) {
-                    sprintf(filename, "sp%02d.log\0", species_number);
+                    sprintf(filename, "sp%02d.log", species_number);
                     log_file = fopen(filename, "a");
                     if (log_file == NULL) {
                         fprintf(stderr, "\n\tCannot open '%s' for appending!\n\n", filename);
@@ -353,9 +353,9 @@ no_jump_orders:
 
 void
 do_jump_orders(void) {
-    extern int   end_of_file;
-    extern int   first_pass;
-    extern char  input_line[256];
+    extern int end_of_file;
+    extern int first_pass;
+    extern char input_line[256];
     extern FILE *log_file;
     extern struct species_data *species;
     extern int species_number;
@@ -391,30 +391,30 @@ do_jump_orders(void) {
         }
 
         switch (command) {
-        case JUMP:
-            do_JUMP_command(FALSE, FALSE);
-            break;
+            case JUMP:
+                do_JUMP_command(FALSE, FALSE);
+                break;
 
-        case MOVE:
-            do_MOVE_command();
-            break;
+            case MOVE:
+                do_MOVE_command();
+                break;
 
-        case PJUMP:
-            do_JUMP_command(FALSE, TRUE);
-            break;
+            case PJUMP:
+                do_JUMP_command(FALSE, TRUE);
+                break;
 
-        case VISITED:
-            do_VISITED_command();
-            break;
+            case VISITED:
+                do_VISITED_command();
+                break;
 
-        case WORMHOLE:
-            do_WORMHOLE_command();
-            break;
+            case WORMHOLE:
+                do_WORMHOLE_command();
+                break;
 
-        default:
-            fprintf(log_file, "!!! Order ignored:\n");
-            fprintf(log_file, "!!! %s", input_line);
-            fprintf(log_file, "!!! Invalid jump command.\n");
+            default:
+                fprintf(log_file, "!!! Order ignored:\n");
+                fprintf(log_file, "!!! %s", input_line);
+                fprintf(log_file, "!!! Invalid jump command.\n");
         }
     }
 }

@@ -75,7 +75,7 @@ main(int argc, char *argv[]) {
         }
 
         /* Check if we have orders. */
-        sprintf(filename, "sp%02d.ord\0", species_number);
+        sprintf(filename, "sp%02d.ord", species_number);
         i = open(filename, 0);
         if (i >= 0) {
             close(i);
@@ -98,7 +98,7 @@ main(int argc, char *argv[]) {
                species_number, species->name);
 
         /* Open message file. */
-        sprintf(filename, "noorders.txt\0");
+        sprintf(filename, "noorders.txt");
         message_file = fopen(filename, "r");
         if (message_file == NULL) {
             fprintf(stderr, "\n\tCannot open '%s' for reading!\n\n", filename);

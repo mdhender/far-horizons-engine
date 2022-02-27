@@ -372,7 +372,7 @@ int main(int argc, char *argv[]) {
     save_star_data();
 
     /* Create species file. */
-    sprintf(filename, "sp%02d.dat\0", species_number);
+    sprintf(filename, "sp%02d.dat", species_number);
 
     species_fd = creat(filename, 0600);
     if (species_fd < 0) {
@@ -394,7 +394,7 @@ int main(int argc, char *argv[]) {
     close(species_fd);
 
     /* Create log file for first turn. Write home star system data to it. */
-    sprintf(filename, "sp%02d.log\0", species_number);
+    sprintf(filename, "sp%02d.log", species_number);
     log_file = fopen(filename, "w");
     if (log_file == NULL) {
         fprintf(stderr, "\n\tCannot open '%s' for writing!\n\n", filename);

@@ -99,7 +99,7 @@ struct species_data	*spec;
 	extra_ships = 0;
 
     /* Open the species data file. */
-    sprintf (filename, "sp%02d.dat\0", spec_number);
+    sprintf (filename, "sp%02d.dat", spec_number);
     spec_fd = open (filename, 0);
     if (spec_fd < 0)
     {

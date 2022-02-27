@@ -135,7 +135,7 @@ start_pass:
 	species->auto_orders = FALSE;
 
 	/* Open orders file for this species. */
-	sprintf (filename, "sp%02d.ord\0", species_number);
+	sprintf (filename, "sp%02d.ord", species_number);
 	input_file = fopen (filename, "r");
 	if (input_file == NULL)
 	{
@@ -216,7 +216,7 @@ find_start:
 	else
 	{
 	    /* Open log file for appending. */
-	    sprintf (filename, "sp%02d.log\0", species_number);
+	    sprintf (filename, "sp%02d.log", species_number);
 	    log_file = fopen (filename, "a");
 	    if (log_file == NULL)
 	    {
