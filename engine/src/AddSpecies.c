@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     /* Get info about new species. */
     get_name_again:
     printf("\nEnter name of species #%d: ", species_number);
-    get_name(spec.name);
+    getName(spec.name);
     j = strlen(spec.name);
     if (j < 5) {
         printf("\n\n\tERROR!  Species '%s' name too short (min 5 chars required)\n", spec.name);
@@ -87,13 +87,13 @@ int main(int argc, char *argv[]) {
     delete_nampla(&home_nampla);        /* Set everything to zero. */
 
     printf("Enter name of home planet: ");
-    get_name(home_nampla.name);
+    getName(home_nampla.name);
 
     printf("Enter name of government: ");
-    get_name(spec.govt_name);
+    getName(spec.govt_name);
 
     printf("Enter type of government: ");
-    get_name(spec.govt_type);
+    getName(spec.govt_type);
 
     get_xyz:
     printf("\nEnter x-coordinate: ");
