@@ -35,8 +35,11 @@ class GameConfig(object):
     def load_config(self):
         try:
             with open(self.config_file, 'r') as f:
-                self.config = yaml.load(f)
-            self.user = self.config['googleaccount']['user']
+                # some versions of yaml require .load, some require .safe_load
+                # self.config = yaml.load(f)
+                self.config = yaml.safe_load(f)
+
+self.user = self.config['googleaccount']['user']
             self.doc_name = self.config['googleaccount']['spreadsheet']
             self.password = self.config['googleaccount']['password']
 
