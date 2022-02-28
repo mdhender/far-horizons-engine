@@ -1,12 +1,19 @@
 //
 // Created by Michael Henderson on 2/28/2022.
 //
+// to build on Linux, run the following command
+//    cc -no-pie spname.c utils.c get_gal.c get_star.c get_plan.c abend.c -o ../bin/spname
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#define THIS_IS_MAIN
+
 #include "spname.h"
 
 struct galaxy_data galaxy;
+int species_number;
 
 int main(int argc, char *argv[]) {
     get_galaxy_data();
