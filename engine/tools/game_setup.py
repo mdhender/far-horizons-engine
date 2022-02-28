@@ -90,8 +90,9 @@ def main(argv):
 
         print("\t Executing AddSpecies (%s) " % (curr_sp_number))
         arg = [str(curr_sp_number), sp_name, home_planet, gov_name, gov_type, x, y, z, n, ML, GV, LS, BI]
-        # print("\t arg [ %s ] " % (arg)) # uncomment to debug arguments to AddSpeciesAuto
+        print("\t arg %s " % (arg))  # uncomment to debug arguments to AddSpeciesAuto
         output = fhutils.run(bin_dir, "AddSpeciesAuto", arg)
+        print("\t output < %s > " % (output))  # uncomment to debug results of AddSpeciesAuto
 
         try:
             fh_names.write("%02d\n%s\n%s\n" % (curr_sp_number, sp_name, email))
